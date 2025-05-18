@@ -1,7 +1,7 @@
-import React, { useRef, useState, useEffect } from 'react';
-import { Button, Box, Typography } from '@mui/material';
+import React, { useRef, useState, useEffect } from "react";
+import { Button, Box, Typography } from "@mui/material";
 
-import { useControllerWithState } from '../useControllerWithState';
+import { useControllerWithState } from "../useControllerWithState";
 
 class Loop {
   public onFrame?: () => void;
@@ -137,11 +137,11 @@ const SingleLoopComponent: React.FC = () => {
       <Typography variant="h6">Single Loop Demo</Typography>
       <Button
         variant="contained"
-        color={isPlaying ? 'secondary' : 'primary'}
+        color={isPlaying ? "secondary" : "primary"}
         onClick={controller.togglePlayPause}
         sx={{ width: 120 }}
       >
-        {isPlaying ? 'Pause' : 'Play'}
+        {isPlaying ? "Pause" : "Play"}
       </Button>
       <Typography variant="body1">Counter: {frameCount}</Typography>
     </Box>
@@ -156,7 +156,7 @@ const SynchronizedLoopsComponent: React.FC = () => {
   const [frameCountB, setFrameCountB] = useState(0);
   const [controller, isPlaying] = useControllerWithState(
     SynchronizedLoopsController,
-    [[loopA, loopB]],
+    [[loopA, loopB]]
   );
 
   useEffect(() => {
@@ -186,11 +186,11 @@ const SynchronizedLoopsComponent: React.FC = () => {
       <Typography variant="h6">Synchronized Two-Loop Demo</Typography>
       <Button
         variant="contained"
-        color={isPlaying ? 'secondary' : 'primary'}
+        color={isPlaying ? "secondary" : "primary"}
         onClick={controller.togglePlayPause}
         sx={{ width: 120 }}
       >
-        {isPlaying ? 'Pause' : 'Play'}
+        {isPlaying ? "Pause" : "Play"}
       </Button>
       <Typography variant="body1">Counter A: {frameCountA}</Typography>
       <Typography variant="body1">Counter B: {frameCountB}</Typography>

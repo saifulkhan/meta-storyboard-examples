@@ -1,8 +1,12 @@
-import { useEffect, useState, useRef } from 'react';
-import Head from 'next/head';
-import Box from '@mui/material/Box';
-import Slider from '@mui/material/Slider';
+/** import locally for development and testing **/
+import * as msb from "../../../meta-storyboard/src";
+/** import from npm library */
+// import * as msb from "meta-storyboard";
+
+import { useEffect, useState, useRef } from "react";
 import {
+  Slider,
+  Box,
   Avatar,
   Button,
   Card,
@@ -17,23 +21,18 @@ import {
   Select,
   SelectChangeEvent,
   Fade,
-} from '@mui/material';
-import AutoStoriesIcon from '@mui/icons-material/AutoStories';
-import ArrowBackIosIcon from '@mui/icons-material/ArrowBackIos';
-import ArrowForwardIosIcon from '@mui/icons-material/ArrowForwardIos';
-import PauseIcon from '@mui/icons-material/Pause';
-import { blue } from '@mui/material/colors';
+} from "@mui/material";
+import AutoStoriesIcon from "@mui/icons-material/AutoStories";
+import ArrowBackIosIcon from "@mui/icons-material/ArrowBackIos";
+import ArrowForwardIosIcon from "@mui/icons-material/ArrowForwardIos";
+import PauseIcon from "@mui/icons-material/Pause";
+import { blue } from "@mui/material/colors";
 
-// local import
-import * as msb from '../..';
-// import from npm library
-// import * as msb from 'meta-storyboard';
-
-import { useControllerWithState } from '../useControllerWithState';
-import covid19CasesData from '../../assets/data/covid19-cases-data.json';
-import covid19NumericalFATable from '../../assets/feature-action-table/covid-19-numerical-fa-table.json';
-import covid19CategoricalFATable from '../../assets/feature-action-table/covid-19-categorical-fa-table.json';
-import covid19CategoricalData from '../../assets/feature-action-table/covid-19-categorical-table.json';
+import { useControllerWithState } from "../useControllerWithState";
+import covid19CasesData from "../../assets/data/covid19-cases-data.json";
+import covid19NumericalFATable from "../../assets/feature-action-table/covid-19-numerical-fa-table.json";
+import covid19CategoricalFATable from "../../assets/feature-action-table/covid-19-categorical-fa-table.json";
+import covid19CategoricalData from "../../assets/feature-action-table/covid-19-categorical-table.json";
 
 const StoryCovid19Gaussian = () => {
   const WIDTH = 1200,
@@ -44,7 +43,7 @@ const StoryCovid19Gaussian = () => {
   const [loading, setLoading] = useState<boolean>(false);
   const [numSegment, setNumSegment] = useState<number>(4);
   const [regions, setRegions] = useState<string[]>([]);
-  const [region, setRegion] = useState<string>('');
+  const [region, setRegion] = useState<string>("");
   const [casesData, setCasesData] = useState<
     Record<string, msb.TimeSeriesData>
   >({});
@@ -55,7 +54,7 @@ const StoryCovid19Gaussian = () => {
   const plot = useRef(new msb.LinePlot()).current;
   const [controller, isPlaying] = useControllerWithState(
     msb.PlayPauseController,
-    plot,
+    plot
   );
 
   useEffect(() => {
@@ -71,7 +70,7 @@ const StoryCovid19Gaussian = () => {
             date: new Date(date),
             y: +y,
           })),
-        ]),
+        ])
       ) as Record<string, msb.TimeSeriesData>;
       setCasesData(casesData);
       setRegions(Object.keys(casesData).sort());
@@ -82,12 +81,12 @@ const StoryCovid19Gaussian = () => {
       setCategoricalEventsData(covid19CategoricalData);
       setCategoricalFATable(covid19CategoricalFATable);
 
-      console.log('Cases data: ', casesData);
-      console.log('Numerical feature-action table data: ', numericalFATable);
+      console.log("Cases data: ", casesData);
+      console.log("Numerical feature-action table data: ", numericalFATable);
 
-      setRegion('Bolton');
+      setRegion("Bolton");
     } catch (error) {
-      console.error('Failed to fetch data; error:', error);
+      console.error("Failed to fetch data; error:", error);
     } finally {
       setLoading(false);
     }
@@ -108,24 +107,24 @@ const StoryCovid19Gaussian = () => {
     // 2. Create timeline actions
     const timelineActions: msb.TimelineAction[] = new msb.FeatureActionFactory()
       .setProps({
-        metric: 'Number of cases',
+        metric: "Number of cases",
         window: 10,
       })
       .setData(data)
       .setNumericalFeatures(numericalFATable) // <- feature-action table
       .setCategoricalFeatures(categoricalEventsData, categoricalFATable)
-      .segment(numSegment, 'gmm')
+      .segment(numSegment, "gmm")
       .create();
 
-    console.log('StoryCovid19Gaussian: timelineActions: ', timelineActions);
+    console.log("StoryCovid19Gaussian: timelineActions: ", timelineActions);
     // 3. Create story in a line plot
     plot
       .setData([data]) // <- timeseries data
       .setName(region) // <- selected region
       .setPlotProps({
         title: `${region}`,
-        xLabel: 'Date',
-        leftAxisLabel: 'Number of cases',
+        xLabel: "Date",
+        leftAxisLabel: "Number of cases",
       } as any)
       .setLineProps([])
       .setCanvas(chartRef.current)
@@ -158,13 +157,12 @@ const StoryCovid19Gaussian = () => {
 
   return (
     <>
-      <Head>
-        <title>Story | COVID-19 (Gaussian)</title>
-      </Head>
+      <title>Story | COVID-19 (Gaussian)</title>
+
       <Box
         sx={{
-          backgroundColor: 'background.default',
-          minHeight: '100%',
+          backgroundColor: "background.default",
+          minHeight: "100%",
           py: 8,
         }}
       >
@@ -178,13 +176,13 @@ const StoryCovid19Gaussian = () => {
             title="Story: Covid19 Single Location"
             subheader="Choose a segment value, a region, and click play to animate the story"
           />
-          <CardContent sx={{ pt: '8px' }}>
+          <CardContent sx={{ pt: "8px" }}>
             {loading ? (
               <Box sx={{ height: 40 }}>
                 <Fade
                   in={loading}
                   style={{
-                    transitionDelay: loading ? '800ms' : '0ms',
+                    transitionDelay: loading ? "800ms" : "0ms",
                   }}
                   unmountOnExit
                 >
@@ -196,9 +194,9 @@ const StoryCovid19Gaussian = () => {
                 <FormGroup
                   sx={{
                     flexDirection: {
-                      xs: 'column',
-                      sm: 'row',
-                      alignItems: 'center',
+                      xs: "column",
+                      sm: "row",
+                      alignItems: "center",
                     },
                   }}
                 >
@@ -268,7 +266,7 @@ const StoryCovid19Gaussian = () => {
                     <Button
                       disabled={!region}
                       variant="contained"
-                      color={isPlaying ? 'secondary' : 'primary'}
+                      color={isPlaying ? "secondary" : "primary"}
                       // 4. Play/pause button
                       onClick={() => controller.togglePlayPause()}
                       endIcon={
@@ -276,7 +274,7 @@ const StoryCovid19Gaussian = () => {
                       }
                       sx={{ width: 120 }}
                     >
-                      {isPlaying ? 'Pause' : 'Play'}
+                      {isPlaying ? "Pause" : "Play"}
                     </Button>
                   </FormControl>
                 </FormGroup>
@@ -285,7 +283,7 @@ const StoryCovid19Gaussian = () => {
                   style={{
                     width: WIDTH,
                     height: HEIGHT,
-                    border: '0px solid',
+                    border: "0px solid",
                   }}
                 ></svg>
               </>

@@ -1,5 +1,9 @@
+/** import locally for development and testing **/
+import * as msb from "../../../meta-storyboard/src";
+/** import from npm library */
+// import * as msb from "meta-storyboard";
+
 import React, { useEffect, useRef, useState, useMemo } from "react";
-import Head from "next/head";
 import {
   Box,
   Avatar,
@@ -7,6 +11,7 @@ import {
   Card,
   CardContent,
   CardHeader,
+  Fade,
   FormControl,
   FormGroup,
   InputLabel,
@@ -15,15 +20,12 @@ import {
   OutlinedInput,
   Select,
 } from "@mui/material";
+import type { SelectChangeEvent } from "@mui/material/Select";
 import AutoStoriesIcon from "@mui/icons-material/AutoStories";
 import ArrowBackIosIcon from "@mui/icons-material/ArrowBackIos";
 import ArrowForwardIosIcon from "@mui/icons-material/ArrowForwardIos";
 import PauseIcon from "@mui/icons-material/Pause";
-
-// local import
-import * as msb from "../../../../../meta-storyboard/meta-storyboard";
-// import from npm library
-// import * as msb from 'meta-storyboard';
+import { blue } from "@mui/material/colors";
 
 import { useControllerWithState } from "../useControllerWithState";
 import covid19CasesData from "../../assets/data/covid19-cases-data.json";
@@ -40,10 +42,12 @@ const StoryCovid19Single = () => {
   const [casesData, setCasesData] = useState<
     Record<string, msb.TimeSeriesData>
   >({});
-  const [numericalFATable, setNumericalFATable] = useState<any>(null);
-  const plot = useRef(new msb.LinePlot()).current;
+  const [numericalFATable, setNumericalFATable] =
+    useState<msb.FeatureActionTableData>([]);
+  const plot = useRef<msb.LinePlot>(new msb.LinePlot()).current;
+  // use the correct controller name for animation synchronization
   const [controller, isPlaying] = useControllerWithState(
-    msb.SynchronizedPlotsController,
+    msb.SyncPlotsController,
     [plot]
   );
 
@@ -66,7 +70,7 @@ const StoryCovid19Single = () => {
       setRegions(Object.keys(casesData).sort());
 
       // 1.2 Load feature-action table a JSON file.
-      setNumericalFATable(covid19NumFATable);
+      setNumericalFATable(covid19NumFATable as msb.FeatureActionTableData);
 
       console.log("Cases data: ", casesData);
       console.log("Numerical feature-action table data: ", numericalFATable);
@@ -117,7 +121,7 @@ const StoryCovid19Single = () => {
     return () => {};
   }, [region, casesData, numericalFATable]);
 
-  const handleSelection = (event: SelectChangeEvent) => {
+  const handleSelection = (event: SelectChangeEvent<string>) => {
     const newRegion = event.target.value;
     if (newRegion) {
       setRegion(newRegion);
@@ -125,13 +129,12 @@ const StoryCovid19Single = () => {
   };
 
   const handleBeginningButton = () => {};
+
   const handleBackButton = () => {};
 
   return (
     <>
-      <Head>
-        <title>Story | COVID-19 Cases</title>
-      </Head>
+      <title>Story | COVID-19 Cases</title>
       <Box
         sx={{
           backgroundColor: "background.default",
@@ -142,7 +145,7 @@ const StoryCovid19Single = () => {
         <Card sx={{ minWidth: 1200 }}>
           <CardHeader
             avatar={
-              <Avatar style={{ backgroundColor: blue[500] }}>
+              <Avatar sx={{ bgcolor: blue[500] }}>
                 <AutoStoriesIcon />
               </Avatar>
             }

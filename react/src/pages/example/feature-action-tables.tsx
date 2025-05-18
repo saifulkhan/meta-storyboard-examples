@@ -1,5 +1,9 @@
+/** import locally for development and testing **/
+// import * as msb from '../../../meta-storyboard/src';
+/** import from npm library */
+import * as msb from "meta-storyboard";
+
 import { useEffect, useState } from "react";
-import Head from "next/head";
 import {
   Button,
   Box,
@@ -10,11 +14,7 @@ import {
   Typography,
 } from "@mui/material";
 
-// local import
-import * as msb from "../../meta-storyboard/src";
-// import from npm library
-// import * as msb from 'meta-storyboard';
-
+import { FeatureActionTable } from "../../components/tables/FeatureActionTable";
 import covid19NumFATable from "../../assets/feature-action-table/covid-19-numerical-fa-table.json";
 import mlNumFATableMirrored from "../../assets/feature-action-table/ml-numerical-fa-table-line.json";
 import mlNumFATablePCP from "../../assets/feature-action-table/ml-numerical-fa-table-pcp.json";
@@ -71,12 +71,10 @@ const FeatureActionTablesPage = () => {
 
   return (
     <>
-      <Head>
-        <title>Feature-Action Table</title>
-      </Head>
+      <title>Feature-Action Table</title>
       <Box
         sx={{
-          // backgroundColor: "background.default",
+          // backgroundColor: 'background.default',
           minHeight: "100%",
           py: 8,
         }}
@@ -114,16 +112,16 @@ const FeatureActionTablesPage = () => {
           </Box>
 
           <Box sx={{ display: "flex", alignItems: "center" }}>
-            <Button variant="contained" disabled onClick={handleCreateTable}>
-              New
+            <Button variant="contained" onClick={handleCreateTable}>
+              Create New Table
             </Button>
             <Box sx={{ width: 8 }} /> {/* Add space between buttons */}
-            <Button variant="contained" disabled onClick={handleSaveTable}>
-              Save
+            <Button variant="contained" onClick={handleSaveTable}>
+              Save Table
             </Button>
           </Box>
         </Box>
-        <msb.FeatureActionTable data={data} setData={setData} />
+        <FeatureActionTable data={data} setData={setData} />
       </Box>
     </>
   );

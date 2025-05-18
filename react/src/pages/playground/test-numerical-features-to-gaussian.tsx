@@ -1,5 +1,10 @@
-import { useEffect, useRef, useState } from 'react';
-import { schemeCategory10 } from 'd3-scale-chromatic';
+/** import locally for development and testing **/
+import * as msb from "../../../meta-storyboard/src";
+/** import from npm library */
+// import * as msb from 'meta-storyboard';
+
+import { useEffect, useRef, useState } from "react";
+import { schemeCategory10 } from "d3-scale-chromatic";
 import {
   Box,
   FormControl,
@@ -8,15 +13,10 @@ import {
   OutlinedInput,
   Select,
   Typography,
-} from '@mui/material';
-import Head from 'next/head';
+} from "@mui/material";
+import Head from "next/head";
 
-// local import
-import * as msb from '../..';
-// import from npm library
-// import * as msb from 'meta-storyboard';
-
-import covid19CasesData from '../../assets/data/covid19-cases-data.json';
+import covid19CasesData from "../../assets/data/covid19-cases-data.json";
 
 const WIDTH = 1500,
   HEIGHT = 500;
@@ -24,7 +24,7 @@ const WIDTH = 1500,
 const TestNFToGaussianPage = () => {
   const chartRef = useRef(null);
   const [regions, setRegions] = useState<string[]>([]);
-  const [region, setRegion] = useState<string>('');
+  const [region, setRegion] = useState<string>("");
   const [casesData, setCasesData] = useState<
     Record<string, msb.TimeSeriesData>
   >({});
@@ -42,16 +42,16 @@ const TestNFToGaussianPage = () => {
             date: new Date(date),
             y: +y,
           })),
-        ]),
+        ])
       ) as Record<string, msb.TimeSeriesData>;
       setCasesData(casesData);
       const loadedRegions = Object.keys(casesData).sort();
       setRegions(loadedRegions);
-      console.log('Cases data: ', casesData);
+      console.log("Cases data: ", casesData);
 
-      setRegion('Bolton');
+      setRegion("Bolton");
     } catch (error) {
-      console.error('Failed to fetch data; error:', error);
+      console.error("Failed to fetch data; error:", error);
     }
   }, []);
 
@@ -59,9 +59,9 @@ const TestNFToGaussianPage = () => {
     if (!region || !casesData[region] || !chartRef.current) return;
 
     const data: msb.TimeSeriesData = casesData[region];
-    const gauss: msb.TimeSeriesData[] = msb.generateGaussForPeaks(data, '', 10);
-    console.debug('data: ', data);
-    console.debug('gauss: ', gauss);
+    const gauss: msb.TimeSeriesData[] = msb.generateGaussForPeaks(data, "", 10);
+    console.debug("data: ", data);
+    console.debug("gauss: ", gauss);
 
     // Add the original timeseries data as the first curve
     gauss.unshift(data);
@@ -69,16 +69,16 @@ const TestNFToGaussianPage = () => {
     new msb.LinePlot()
       .setData(gauss)
       .setPlotProps({
-        xLabel: 'Date',
+        xLabel: "Date",
         title: `${region}`,
-        leftAxisLabel: 'Number of cases',
-        rightAxisLabel: 'Ranks',
+        leftAxisLabel: "Number of cases",
+        rightAxisLabel: "Ranks",
       })
       .setLineProps(
         gauss.map((d, i) => {
           if (i === 0) {
             return {
-              stroke: '#D3D3D3',
+              stroke: "#D3D3D3",
               strokeWidth: 1,
             };
           } else {
@@ -88,7 +88,7 @@ const TestNFToGaussianPage = () => {
               onRightAxis: true,
             };
           }
-        }),
+        })
       )
       .setCanvas(chartRef.current)
       .plot();
@@ -109,7 +109,7 @@ const TestNFToGaussianPage = () => {
 
       <Box
         sx={{
-          minHeight: '100%',
+          minHeight: "100%",
           py: 8,
         }}
       >
@@ -143,7 +143,7 @@ const TestNFToGaussianPage = () => {
             style={{
               width: `${WIDTH}px`,
               height: `${HEIGHT}px`,
-              border: '1px solid',
+              border: "1px solid",
             }}
           ></svg>
         </FormControl>

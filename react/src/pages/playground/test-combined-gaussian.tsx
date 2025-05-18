@@ -1,4 +1,9 @@
-import React, { useEffect, useRef, useState } from 'react';
+/** import locally for development and testing **/
+import * as msb from "../../../meta-storyboard/src";
+/** import from npm library */
+// import * as msb from 'meta-storyboard';
+
+import React, { useEffect, useRef, useState } from "react";
 import {
   Box,
   FormControl,
@@ -8,16 +13,11 @@ import {
   OutlinedInput,
   Select,
   Slider,
-} from '@mui/material';
+} from "@mui/material";
 
-// local import
-import * as msb from '../..';
-// import from npm library
-// import * as msb from 'meta-storyboard';
-
-import covid19CasesData from '../../assets/data/covid19-cases-data.json';
-import covid19CategoricalFATable from '../../assets/feature-action-table/covid-19-categorical-table.json';
-import covid19NumFATable from '../../assets/feature-action-table/covid-19-numerical-fa-table.json';
+import covid19CasesData from "../../assets/data/covid19-cases-data.json";
+import covid19CategoricalFATable from "../../assets/feature-action-table/covid-19-categorical-table.json";
+import covid19NumFATable from "../../assets/feature-action-table/covid-19-numerical-fa-table.json";
 
 const WIDTH = 1500,
   HEIGHT = 500;
@@ -26,7 +26,7 @@ const TestCombinedGaussianPage = () => {
   const chartRef = useRef(null);
   const [segment, setSegment] = useState<number>(3);
   const [regions, setRegions] = useState<string[]>([]);
-  const [region, setRegion] = useState<string>('');
+  const [region, setRegion] = useState<string>("");
   const [casesData, setCasesData] = useState<
     Record<string, msb.TimeSeriesData>
   >({});
@@ -50,13 +50,13 @@ const TestCombinedGaussianPage = () => {
             date: new Date(date),
             y: +y,
           })),
-        ]),
+        ])
       ) as Record<string, msb.TimeSeriesData>;
       setCasesData(casesData);
       setRegions(Object.keys(casesData).sort());
       console.log(
         `${Object.keys(casesData).length} regions' data: `,
-        casesData,
+        casesData
       );
 
       // 1.2 Get categorical features
@@ -65,8 +65,8 @@ const TestCombinedGaussianPage = () => {
           new msb.CategoricalFeature()
             .setDate(new Date(d.date))
             .setRank(d.rank)
-            .setDescription(d.event),
-        ),
+            .setDescription(d.event)
+        )
       );
       // prettier-ignore
       console.debug('TestCombinedGaussianPage: categoricalFeatures: ', categoricalFeatures);
@@ -76,9 +76,9 @@ const TestCombinedGaussianPage = () => {
       // prettier-ignore
       console.debug('TestCombinedGaussianPage: numericalFATable: ', numericalFATable);
 
-      setRegion('Bolton');
+      setRegion("Bolton");
     } catch (error) {
-      console.error('Failed to fetch data; error:', error);
+      console.error("Failed to fetch data; error:", error);
     }
   }, []);
 
@@ -96,7 +96,7 @@ const TestCombinedGaussianPage = () => {
       msb.generateGaussForCategoricalFeatures(data, categoricalFeatures);
     const peakGaussBounds: msb.TimeSeriesData = msb.maxAcrossSeries(
       data,
-      peakGauss,
+      peakGauss
     );
     const catagoricalFeatureGaussBounds: msb.TimeSeriesData =
       msb.maxAcrossSeries(data, catagoricalFeatureGauss);
@@ -120,7 +120,7 @@ const TestCombinedGaussianPage = () => {
     //
 
     const combinedGauss2 = msb.gmm(data, categoricalFeatures);
-    console.debug('TestCombinedGaussianPage: combinedGauss2:', combinedGauss2);
+    console.debug("TestCombinedGaussianPage: combinedGauss2:", combinedGauss2);
 
     //
     // --- Test segmentation - we have two functions implemented slightly differently ---
@@ -154,7 +154,7 @@ const TestCombinedGaussianPage = () => {
     // Option-3: Using segmentByPeaks
     const segmentedGaussianPeakPoints = msb.segmentByPeaks(
       combinedGauss2,
-      segment,
+      segment
     );
     // prettier-ignore
     console.debug('TestCombinedGaussianPage: segmentedGaussianPeakPoints:', segmentedGaussianPeakPoints);
@@ -163,18 +163,18 @@ const TestCombinedGaussianPage = () => {
     const catFeaturesAtSegments = segmentedGaussianPeakPoints.map((point) => {
       let catFeature = msb.findClosestCategoricalFeature(
         categoricalFeatures,
-        point.date,
+        point.date
       );
 
       let numFeature = msb.findClosestNumericalFeature(
-        msb.searchPeaks(data, 0, ''),
-        point.date,
+        msb.searchPeaks(data, 0, ""),
+        point.date
       );
 
       let closestFeature = msb.findClosestFeature(
         categoricalFeatures,
-        msb.searchPeaks(data, 0, ''),
-        point.date,
+        msb.searchPeaks(data, 0, ""),
+        point.date
       );
 
       // prettier-ignore
@@ -206,16 +206,16 @@ const TestCombinedGaussianPage = () => {
         combinedGauss1,
       ])
       .setPlotProps({
-        xLabel: 'Date',
+        xLabel: "Date",
         title: `${region}`,
-        leftAxisLabel: 'Number of cases',
-        rightAxisLabel: 'Rank',
+        leftAxisLabel: "Number of cases",
+        rightAxisLabel: "Rank",
       } as any)
       .setLineProps(
         combinedGauss1.map((d, i) => {
           if (i === 0) {
             return {
-              stroke: '#D3D3D3',
+              stroke: "#D3D3D3",
               strokeWidth: 2,
               showPoints: false,
             } as any;
@@ -227,7 +227,7 @@ const TestCombinedGaussianPage = () => {
               showPoints: false,
             } as any;
           }
-        }),
+        })
       )
       .setCanvas(chartRef.current)
       .plot();
@@ -240,7 +240,7 @@ const TestCombinedGaussianPage = () => {
       new msb.Dot()
         .setProps({
           size: 4,
-          color: 'blue',
+          color: "blue",
           opacity: 0.5,
         } as any)
         .setCanvas(chartRef.current)
@@ -254,7 +254,7 @@ const TestCombinedGaussianPage = () => {
       new msb.Circle()
         .setProps({
           size: 8,
-          color: 'blue',
+          color: "blue",
           opacity: 1,
         } as any)
         .setCanvas(chartRef.current)
@@ -264,13 +264,13 @@ const TestCombinedGaussianPage = () => {
       // If there's a categorical feature at this point, add a label or different visualization
       const feature = msb.findCategoricalFeatureByDate(
         categoricalFeatures,
-        point.date,
+        point.date
       );
       if (feature) {
         new msb.Circle()
           .setProps({
             size: 12,
-            color: 'green',
+            color: "green",
             opacity: 1,
           } as any)
           .setCanvas(chartRef.current)
@@ -325,10 +325,10 @@ const TestCombinedGaussianPage = () => {
 
   const handleChangeSlider = (
     _event: React.SyntheticEvent | Event,
-    value: number | number[],
+    value: number | number[]
   ) => {
-    const selectedSegment = typeof value === 'number' ? value : value[0];
-    console.log('segment = ', selectedSegment);
+    const selectedSegment = typeof value === "number" ? value : value[0];
+    console.log("segment = ", selectedSegment);
     if (selectedSegment !== undefined && selectedSegment !== segment) {
       setSegment(selectedSegment);
     }
@@ -340,16 +340,16 @@ const TestCombinedGaussianPage = () => {
 
       <Box
         sx={{
-          minHeight: '100%',
+          minHeight: "100%",
           py: 8,
         }}
       >
         <FormGroup
           sx={{
             flexDirection: {
-              xs: 'column',
-              sm: 'row',
-              alignItems: 'center',
+              xs: "column",
+              sm: "row",
+              alignItems: "center",
             },
           }}
         >
@@ -396,7 +396,7 @@ const TestCombinedGaussianPage = () => {
             style={{
               width: `${WIDTH}px`,
               height: `${HEIGHT}px`,
-              border: '1px solid',
+              border: "1px solid",
             }}
           ></svg>
         </FormGroup>

@@ -31,7 +31,8 @@
     "not IE 11"
   ],
   "dependencies": {
-    "meta-storyboard": "^0.1.2",
+    "@emotion/babel-plugin": "^11.13.5",
+    "meta-storyboard": "^0.2.6",
     "react": ">=17.0.0",
     "react-dom": ">=17.0.0"
   },
@@ -39,9 +40,10 @@
     "@babel/core": "^7.24.0",
     "@babel/plugin-transform-runtime": "^7.24.0",
     "@babel/preset-env": "^7.24.0",
-    "@babel/preset-react": "7.18.6",
+    "@babel/preset-react": "^7.27.1",
     "@babel/preset-typescript": "^7.24.0",
     "@babel/runtime": "^7.24.0",
+    "@emotion/babel-preset-css-prop": "^11.12.0",
     "@emotion/react": "^11.14.0",
     "@emotion/styled": "^11.14.0",
     "@mui/icons-material": "^7.0.1",
@@ -53,8 +55,8 @@
     "@rollup/plugin-typescript": "^11.1.6",
     "@svgr/webpack": "6.3.1",
     "@types/d3": "^7.4.3",
-    "@types/react": "^19.0.0",
-    "@types/react-dom": "^19.0.0",
+    "@types/react": "^19.1.4",
+    "@types/react-dom": "^19.1.5",
     "babel-plugin-direct-import": "1.0.0",
     "d3": "^7.8.5",
     "eslint": "^9.24.0",
