@@ -1,11 +1,11 @@
 /** import locally for development and testing **/
-import * as msb from "../../../meta-storyboard/src";
+import * as msb from '../../../msb/src';
 /** import from npm library */
 // import * as msb from 'meta-storyboard';
 
-import React, { useEffect, useRef, useState } from "react";
-import * as d3 from "d3";
-import { schemeTableau10 } from "d3-scale-chromatic";
+import React, { useEffect, useRef, useState } from 'react';
+import * as d3 from 'd3';
+import { schemeTableau10 } from 'd3-scale-chromatic';
 import {
   Box,
   FormControl,
@@ -14,10 +14,10 @@ import {
   OutlinedInput,
   Select,
   Typography,
-} from "@mui/material";
-import Head from "next/head";
+} from '@mui/material';
+import Head from 'next/head';
 
-import covid19CasesData from "../../assets/data/covid19-cases-data.json";
+import covid19CasesData from '../../assets/data/covid19-cases-data.json';
 
 const WIDTH = 1500,
   HEIGHT = 500;
@@ -26,7 +26,7 @@ const FeaturesPage = () => {
   const chartRef = useRef(null);
   const [loading, setLoading] = useState(true);
   const [regions, setRegions] = useState<string[]>([]);
-  const [region, setRegion] = useState<string>("");
+  const [region, setRegion] = useState<string>('');
   const [casesData, setCasesData] = useState<
     Record<string, msb.TimeSeriesData>
   >({});
@@ -48,10 +48,10 @@ const FeaturesPage = () => {
       ) as Record<string, msb.TimeSeriesData>;
       setCasesData(casesData);
       setRegions(Object.keys(casesData).sort());
-      console.log("Cases data: ", casesData);
-      setRegion("Bolton");
+      console.log('Cases data: ', casesData);
+      setRegion('Bolton');
     } catch (error) {
-      console.error("Failed to fetch data; error:", error);
+      console.error('Failed to fetch data; error:', error);
     } finally {
       setLoading(false);
     }
@@ -60,22 +60,22 @@ const FeaturesPage = () => {
   useEffect(() => {
     if (!region || !casesData[region] || !chartRef.current) return;
     const data = casesData[region];
-    const peaks: msb.Peak[] = msb.searchPeaks(data, 1, "cases", 10);
-    console.log("TestFeatures: data = ", data);
-    console.log("FeaturesPage: peaks = ", peaks);
+    const peaks: msb.Peak[] = msb.Search.searchPeaks(data, 1, 'cases', 10);
+    console.log('TestFeatures: data = ', data);
+    console.log('FeaturesPage: peaks = ', peaks);
 
-    const peaksStartEnd = peaks.map((peak) =>
+    const peaksStartEnd = peaks.map(peak =>
       msb.sliceTimeseriesByDate(data, peak.getStart(), peak.getEnd())
     );
     peaksStartEnd.unshift(data);
 
-    console.log("TestFeatures: peaksData = ", peaksStartEnd);
+    console.log('TestFeatures: peaksData = ', peaksStartEnd);
 
     d3.select(chartRef.current)
-      .append("svg")
-      .attr("width", WIDTH)
-      .attr("height", HEIGHT)
-      .append("g")
+      .append('svg')
+      .attr('width', WIDTH)
+      .attr('height', HEIGHT)
+      .append('g')
       .node();
 
     // Make sure chartRef.current is not null before using it
@@ -83,9 +83,9 @@ const FeaturesPage = () => {
       const plot = new msb.LinePlot()
         .setData(peaksStartEnd)
         .setPlotProps({
-          xLabel: "Date",
+          xLabel: 'Date',
           title: `${region}`,
-          leftAxisLabel: "Number of cases",
+          leftAxisLabel: 'Number of cases',
         } as any)
         .setLineProps(
           peaksStartEnd.map((d, i) => {
@@ -98,12 +98,12 @@ const FeaturesPage = () => {
         .setCanvas(chartRef.current)
         .plot();
 
-      peaks.forEach((peak) => {
+      peaks.forEach(peak => {
         console.log(plot.getCoordinates(peak.getDate()));
         // Add null check for chartRef.current
         if (chartRef.current) {
           new msb.Dot()
-            .setProps({ color: "#FF5349" } as any)
+            .setProps({ color: '#FF5349' } as any)
             .setCanvas(chartRef.current)
             .setCoordinate(plot.getCoordinates(peak.getDate()))
             .show();
@@ -127,7 +127,7 @@ const FeaturesPage = () => {
 
       <Box
         sx={{
-          minHeight: "100%",
+          minHeight: '100%',
           py: 8,
         }}
       >
@@ -145,7 +145,7 @@ const FeaturesPage = () => {
             value={region}
             input={<OutlinedInput label="Select region" />}
           >
-            {regions.map((d) => (
+            {regions.map(d => (
               <MenuItem key={d} value={d}>
                 {d}
               </MenuItem>
@@ -157,7 +157,7 @@ const FeaturesPage = () => {
             style={{
               width: `${WIDTH}px`,
               height: `${HEIGHT}px`,
-              border: "1px solid",
+              border: '1px solid',
             }}
           ></svg>
         </FormControl>

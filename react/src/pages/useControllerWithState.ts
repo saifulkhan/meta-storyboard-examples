@@ -16,7 +16,7 @@ export function useControllerWithState<
   },
 >(
   ControllerClass: new (...args: any[]) => T,
-  controllerArgs: any,
+  controllerArgs: any
 ): [T, boolean] {
   const [isPlaying, setIsPlaying] = useState(false);
 

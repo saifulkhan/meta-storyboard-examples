@@ -1,4 +1,4 @@
-import React, { useCallback, useState, useEffect } from "react";
+import React, { useCallback, useState, useEffect } from 'react';
 import {
   Button,
   Table,
@@ -10,14 +10,14 @@ import {
   MenuItem,
   TextField,
   IconButton,
-} from "@mui/material";
-import AddIcon from "@mui/icons-material/Add";
-import RemoveIcon from "@mui/icons-material/Remove";
-import { styled } from "@mui/material/styles";
+} from '@mui/material';
+import AddIcon from '@mui/icons-material/Add';
+import RemoveIcon from '@mui/icons-material/Remove';
+import { styled } from '@mui/material/styles';
 
-import * as msb from "meta-storyboard";
-import { FeaturePropertiesTable } from "./FeaturePropertiesTable";
-import { ActionTable } from "./ActionTable";
+import * as msb from 'meta-storyboard';
+import { FeaturePropertiesTable } from './FeaturePropertiesTable';
+import { ActionTable } from './ActionTable';
 
 const getInitialProperties = (action: msb.ActionName) => {
   switch (action) {
@@ -36,70 +36,70 @@ const getInitialProperties = (action: msb.ActionName) => {
 
 // Define styled components to replace makeStyles
 const StyledTable = styled(Table)({
-  width: "100%",
-  borderCollapse: "collapse",
+  width: '100%',
+  borderCollapse: 'collapse',
   borderSpacing: 0,
 });
 
 const StyledTableRow = styled(TableRow)({
-  "&:not(:last-child)": {
-    borderBottom: "1.5px solid #808080",
+  '&:not(:last-child)': {
+    borderBottom: '1.5px solid #808080',
   },
 });
 
 const StyledTableCell = styled(TableCell)({
-  fontSize: "12px",
+  fontSize: '12px',
 });
 
 // Style constants to use with sx prop
 const styles = {
   featureHeadCell: {
-    fontWeight: "bold",
+    fontWeight: 'bold',
   },
   propertiesHeadCell: {
-    fontWeight: "bold",
+    fontWeight: 'bold',
   },
   rankHeadCell: {
-    fontWeight: "bold",
+    fontWeight: 'bold',
   },
   actionHeadCell: {
-    fontWeight: "bold",
-    textAlign: "center",
+    fontWeight: 'bold',
+    textAlign: 'center',
   },
   featureCell: {
-    width: "15%",
-    fontSize: "12px",
-    padding: "4px",
+    width: '15%',
+    fontSize: '12px',
+    padding: '4px',
   },
   propertyCell: {
-    width: "15%",
-    fontSize: "12px",
-    padding: "2px",
+    width: '15%',
+    fontSize: '12px',
+    padding: '2px',
   },
   rankCell: {
-    width: "10%",
+    width: '10%',
   },
   actionCell: {
-    width: "60%",
+    width: '60%',
   },
   rankTextField: {
-    "& .MuiInputBase-root": {
-      height: "30px",
-      width: "100px",
+    '& .MuiInputBase-root': {
+      height: '30px',
+      width: '100px',
     },
-    "& .MuiInputBase-input": {
-      height: "30px",
-      padding: "0 14px",
+    '& .MuiInputBase-input': {
+      height: '30px',
+      padding: '0 14px',
     },
   },
   selectField: {
-    height: "30px",
+    height: '30px',
   },
   removeIcon: {
-    color: "red",
+    color: 'red',
   },
   addIcon: {
-    color: "green",
+    color: 'green',
   },
 };
 
@@ -112,7 +112,7 @@ export const FeatureActionTable: React.FC<FeatureActionTableProps> = ({
   data,
   setData,
 }) => {
-  console.log("FeatureActionTable: re-rendered");
+  console.log('FeatureActionTable: re-rendered');
 
   // No need for useStyles() with the new approach
   const [rows, setRows] = useState<msb.FeatureActionTableRow[]>(data);
@@ -146,7 +146,7 @@ export const FeatureActionTable: React.FC<FeatureActionTableProps> = ({
     index: number,
     feature: msb.NumericalFeatureName
   ) => {
-    console.log("FeatureActionTable: index = ", index, ", action = ", feature);
+    console.log('FeatureActionTable: index = ', index, ', action = ', feature);
 
     /*
     const newRows = [...rows];
@@ -168,7 +168,7 @@ export const FeatureActionTable: React.FC<FeatureActionTableProps> = ({
   };
 
   const handleRankChange = (index: number, rank: number) => {
-    console.log("index: ", index, ", rank: ", rank);
+    console.log('index: ', index, ', rank: ', rank);
     /*
     setEditCellId(id);
     setEditedValue(value.toString()); // Convert value to string for the TextField
@@ -207,14 +207,14 @@ export const FeatureActionTable: React.FC<FeatureActionTableProps> = ({
                 <Select
                   sx={styles.selectField}
                   value={row.feature}
-                  onChange={(e) =>
+                  onChange={e =>
                     handleActionChange(
                       index,
                       e.target.value as msb.NumericalFeatureName
                     )
                   }
                 >
-                  {Object.values(msb.NumericalFeatureName).map((feature) => (
+                  {Object.values(msb.NumericalFeatureName).map(feature => (
                     <MenuItem key={feature} value={feature}>
                       {feature}
                     </MenuItem>
@@ -240,7 +240,7 @@ export const FeatureActionTable: React.FC<FeatureActionTableProps> = ({
                   type="number"
                   key={index} // ensure each instance has a unique key
                   value={row.rank}
-                  onChange={(e) =>
+                  onChange={e =>
                     handleRankChange(index, parseInt(e.target.value, 10))
                   }
                 />

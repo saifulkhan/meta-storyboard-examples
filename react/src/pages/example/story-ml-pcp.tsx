@@ -1,11 +1,12 @@
 /** import locally for development and testing **/
-import * as msb from "../../../meta-storyboard/src";
+import * as msb from '../../../msb/src';
 /** import from npm library */
 // import * as msb from "meta-storyboard";
 
-import { useEffect, useState, useRef } from "react";
+import { useEffect, useState, useRef } from 'react';
+import Head from 'next/head';
+import Box from '@mui/material/Box';
 import {
-  Box,
   Avatar,
   Button,
   Card,
@@ -18,41 +19,39 @@ import {
   MenuItem,
   OutlinedInput,
   Select,
+  SelectChangeEvent,
   Fade,
-} from "@mui/material";
-import type { SelectChangeEvent } from "@mui/material/Select";
+} from '@mui/material';
+import AutoStoriesIcon from '@mui/icons-material/AutoStories';
+import ArrowBackIosIcon from '@mui/icons-material/ArrowBackIos';
+import ArrowForwardIosIcon from '@mui/icons-material/ArrowForwardIos';
+import PauseIcon from '@mui/icons-material/Pause';
+import { blue } from '@mui/material/colors';
 
-import AutoStoriesIcon from "@mui/icons-material/AutoStories";
-import ArrowBackIosIcon from "@mui/icons-material/ArrowBackIos";
-import ArrowForwardIosIcon from "@mui/icons-material/ArrowForwardIos";
-import PauseIcon from "@mui/icons-material/Pause";
-import { blue } from "@mui/material/colors";
-
-import { useControllerWithState } from "../useControllerWithState";
-import mlTrainingData from "../../assets/data/ml-training-data.json";
-import mlNumFATable from "../../assets/feature-action-table/ml-numerical-fa-table-pcp.json";
+import { useControllerWithState } from '../useControllerWithState';
+import mlTrainingData from '../../assets/data/ml-training-data.json';
+import mlNumFATable from '../../assets/feature-action-table/ml-numerical-fa-table-pcp.json';
 
 const StoryMLPCP = () => {
   const WIDTH = 1200,
     HEIGHT = 1000;
   const HYPERPARAMS = [
-    "channels",
-    "kernel_size",
-    "layers",
-    "samples_per_class",
+    'channels',
+    'kernel_size',
+    'layers',
+    'samples_per_class',
   ];
 
   const chartRef = useRef(null);
   const [loading, setLoading] = useState<boolean>(false);
-  const [hyperparam, setHyperparam] = useState<string>("");
+  const [hyperparam, setHyperparam] = useState<string>('');
   const [mlData, setMLData] = useState<msb.TimeSeriesData>([]);
   const [numericalFATable, setNumericalFATable] = useState<any>({});
 
   const plot = useRef(new msb.ParallelCoordinatePlot()).current;
-
   const [controller, isPlaying] = useControllerWithState(
-    msb.SyncPlotsController,
-    [plot]
+    msb.PlayPauseController,
+    plot
   );
 
   useEffect(() => {
@@ -61,21 +60,19 @@ const StoryMLPCP = () => {
 
     // 1.1 Load ML training data
     setMLData(
-      mlTrainingData
-        .map(({ date, ...rest }) => ({
-          date: new Date(date),
-          ...rest,
-        }))
-        .sort((a, b) => a.date.getTime() - b.date.getTime())
+      mlTrainingData.map(({ date, ...rest }) => ({
+        date: new Date(date),
+        ...rest,
+      }))
     );
 
     // 1.2 Load feature-action table
     setNumericalFATable(mlNumFATable);
 
-    console.log("ML data: ", mlData);
-    console.log("Numerical feature-action table data: ", numericalFATable);
+    console.log('ML data: ', mlData);
+    console.log('Numerical feature-action table data: ', numericalFATable);
 
-    setHyperparam("channels");
+    setHyperparam('channels');
 
     setLoading(false);
   }, []);
@@ -95,7 +92,7 @@ const StoryMLPCP = () => {
 
     // 2. Create timeline actions
     const timelineActions: msb.TimelineAction[] = new msb.FeatureActionFactory()
-      .setProps({ metric: "accuracy", window: 0 })
+      .setProps({ metric: 'accuracy', window: 0 })
       .setData(data) // <- timeseries data
       .setNumericalFeatures(numericalFATable) // <- feature-action table
       .create();
@@ -106,20 +103,14 @@ const StoryMLPCP = () => {
       .setName(hyperparam) // <- selected hyperparameter
       .setData(data) // <- timeseries data
       .setCanvas(chartRef.current)
-      .setActions(timelineActions)
-      // .plot() // Initialize the plot
-      .animate(); // Start the animation loop (paused by default)
+      //.plot(); // static plot
+      .setActions(timelineActions);
+    // TODO: animate();
 
-    // Pause the animation initially
+    // 4. Pause the animation, start when play button is clicked
     controller.pause();
 
-    // Cleanup function
-    return () => {
-      plot.pause();
-      if (controller) {
-        controller.pause();
-      }
-    };
+    return () => {};
   }, [hyperparam]);
 
   const handleSelection = (event: SelectChangeEvent) => {
@@ -129,51 +120,18 @@ const StoryMLPCP = () => {
     }
   };
 
-  const handleBeginningButton = () => {
-    // reset to the beginning of the animation
-    if (plot) {
-      plot.pause();
-      // reset animation state if there's a reset method
-      if (typeof plot.reset === "function") {
-        plot.reset();
-      }
-      // restart the animation if it was playing
-      if (isPlaying) {
-        plot.animate();
-      }
-    }
-  };
-
-  const handleBackButton = () => {
-    // go back one step in the animation
-    if (plot) {
-      // Use the appropriate method to go back in the animation
-      // If there's no direct method, we can pause and reset to beginning
-      plot.pause();
-      if (typeof plot.reset === "function") {
-        plot.reset();
-      }
-    }
-  };
-
-  const handlePlayPause = () => {
-    if (!controller) return;
-
-    if (isPlaying) {
-      controller.pause();
-    } else {
-      controller.play();
-    }
-  };
+  const handleBeginningButton = () => {};
+  const handleBackButton = () => {};
 
   return (
     <>
-      <title>Story | ML Multivariate</title>
-
+      <Head>
+        <title>Story | ML Multivariate</title>
+      </Head>
       <Box
         sx={{
-          backgroundColor: "background.default",
-          minHeight: "100%",
+          backgroundColor: 'background.default',
+          minHeight: '100%',
           py: 8,
         }}
       >
@@ -187,13 +145,13 @@ const StoryMLPCP = () => {
             title="Story: Machine Learning Multivariate"
             subheader="Choose a hyperparameter, and click play to animate the story"
           />
-          <CardContent sx={{ pt: "8px" }}>
+          <CardContent sx={{ pt: '8px' }}>
             {loading ? (
               <Box sx={{ height: 40 }}>
                 <Fade
                   in={loading}
                   style={{
-                    transitionDelay: loading ? "800ms" : "0ms",
+                    transitionDelay: loading ? '800ms' : '0ms',
                   }}
                   unmountOnExit
                 >
@@ -205,9 +163,9 @@ const StoryMLPCP = () => {
                 <FormGroup
                   sx={{
                     flexDirection: {
-                      xs: "column",
-                      sm: "row",
-                      alignItems: "center",
+                      xs: 'column',
+                      sm: 'row',
+                      alignItems: 'center',
                     },
                   }}
                 >
@@ -223,7 +181,7 @@ const StoryMLPCP = () => {
                       value={hyperparam}
                       input={<OutlinedInput label="Select hyperparameter" />}
                     >
-                      {HYPERPARAMS.map((d) => (
+                      {HYPERPARAMS.map(d => (
                         <MenuItem key={d} value={d}>
                           {d}
                         </MenuItem>
@@ -256,16 +214,17 @@ const StoryMLPCP = () => {
 
                   <FormControl sx={{ m: 1, width: 100, mt: 0 }}>
                     <Button
+                      disabled={!hyperparam}
                       variant="contained"
-                      color={isPlaying ? "secondary" : "primary"}
-                      onClick={handlePlayPause}
-                      startIcon={
+                      color={isPlaying ? 'secondary' : 'primary'}
+                      // 4. Play/pause button
+                      onClick={() => controller.togglePlayPause()}
+                      endIcon={
                         isPlaying ? <PauseIcon /> : <ArrowForwardIosIcon />
                       }
-                      disabled={!hyperparam || loading}
                       sx={{ width: 120 }}
                     >
-                      {isPlaying ? "Pause" : "Play"}
+                      {isPlaying ? 'Pause' : 'Play'}
                     </Button>
                   </FormControl>
                 </FormGroup>
@@ -274,7 +233,7 @@ const StoryMLPCP = () => {
                   style={{
                     width: WIDTH,
                     height: HEIGHT,
-                    border: "0px solid",
+                    border: '0px solid',
                   }}
                 ></svg>
               </>

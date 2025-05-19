@@ -150,7 +150,7 @@ export const FeaturePropertiesTable: React.FC<FeaturePropertiesTableProps> = ({
                   <TextField
                     size="small"
                     value={newKey}
-                    onChange={(e) => setNewKey(e.target.value)}
+                    onChange={e => setNewKey(e.target.value)}
                     onBlur={() => handleKeyChange(key)}
                     autoFocus
                   />
@@ -164,7 +164,7 @@ export const FeaturePropertiesTable: React.FC<FeaturePropertiesTableProps> = ({
                   sx={styles.valueInput}
                   type="text"
                   value={value}
-                  onChange={(e) => handleValueChange(key, e.target.value)}
+                  onChange={e => handleValueChange(key, e.target.value)}
                 />
               </StyledTableCell>
             </StyledTableRow>

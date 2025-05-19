@@ -1,9 +1,9 @@
 /** import locally for development and testing **/
-import * as msb from "../../../meta-storyboard/src";
+import * as msb from '../../../msb/src';
 /** import from npm library */
 // import * as msb from 'meta-storyboard';
 
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect } from 'react';
 import {
   Table,
   TableBody,
@@ -12,33 +12,33 @@ import {
   Select,
   MenuItem,
   IconButton,
-} from "@mui/material";
-import RemoveIcon from "@mui/icons-material/Remove";
-import AddIcon from "@mui/icons-material/Add";
-import { styled } from "@mui/material/styles";
+} from '@mui/material';
+import RemoveIcon from '@mui/icons-material/Remove';
+import AddIcon from '@mui/icons-material/Add';
+import { styled } from '@mui/material/styles';
 
-import { ActionPropertiesTable } from "./ActionPropertiesTable";
+import { ActionPropertiesTable } from './ActionPropertiesTable';
 
-const getInitialProperties = (action: ActionName) => {
+const getInitialProperties = (action: msb.ActionName) => {
   switch (action) {
-    case ActionName.DOT:
-      return defaultDotProps;
-    case ActionName.CIRCLE:
-      return defaultCircleProps;
-    case ActionName.TEXT_BOX:
-      return defaultTextBoxProps;
-    case ActionName.CONNECTOR:
-      return defaultConnectorProperties;
+    case msb.ActionName.DOT:
+      return msb.defaultDotProps;
+    case msb.ActionName.CIRCLE:
+      return msb.defaultCircleProps;
+    case msb.ActionName.TEXT_BOX:
+      return msb.defaultTextBoxProps;
+    case msb.ActionName.CONNECTOR:
+      return msb.defaultConnectorProperties;
     default:
       // Return defaultDotProps instead of empty object to satisfy type constraints
-      return defaultDotProps;
+      return msb.defaultDotProps;
   }
 };
 
 // Define styled components to replace makeStyles
 const StyledTable = styled(Table)({
-  width: "100%",
-  borderCollapse: "collapse",
+  width: '100%',
+  borderCollapse: 'collapse',
 });
 
 const StyledTableRow = styled(TableRow)({
@@ -46,42 +46,42 @@ const StyledTableRow = styled(TableRow)({
 });
 
 const StyledTableCell = styled(TableCell)({
-  fontSize: "12px",
+  fontSize: '12px',
 });
 
 // Style constants to use with sx prop
 const styles = {
   actionCell: {
-    width: "20%",
-    fontSize: "12px",
-    padding: "4px",
+    width: '20%',
+    fontSize: '12px',
+    padding: '4px',
   },
   propertyCell: {
-    width: "80%",
-    fontSize: "12px",
-    padding: "2px",
+    width: '80%',
+    fontSize: '12px',
+    padding: '2px',
   },
   selectField: {
-    height: "30px",
+    height: '30px',
   },
   removeIcon: {
-    color: "red",
+    color: 'red',
   },
   addIcon: {
-    color: "green",
+    color: 'green',
   },
 };
 
 interface ActionTableProps {
-  data: ActionTableRow[];
-  setData: React.Dispatch<React.SetStateAction<ActionTableRow[]>>;
+  data: msb.ActionTableRow[];
+  setData: React.Dispatch<React.SetStateAction<msb.ActionTableRow[]>>;
 }
 
 export const ActionTable: React.FC<ActionTableProps> = ({ data, setData }) => {
-  console.log("ActionTable: re-rendered");
+  console.log('ActionTable: re-rendered');
 
   // No need for useStyles() with the new approach
-  const [rows, setRows] = useState<ActionTableRow[]>(data);
+  const [rows, setRows] = useState<msb.ActionTableRow[]>(data);
 
   // this effect will trigger whenever data (input argument) changes
   useEffect(() => {
@@ -89,7 +89,10 @@ export const ActionTable: React.FC<ActionTableProps> = ({ data, setData }) => {
   }, [data]); // trigger effect when data changes
 
   const handleAddRow = () => {
-    setRows([...rows, { action: ActionName.DOT, properties: defaultDotProps }]);
+    setRows([
+      ...rows,
+      { action: msb.ActionName.DOT, properties: msb.defaultDotProps },
+    ]);
   };
 
   const handleRemoveRow = (index: number) => {
@@ -98,8 +101,8 @@ export const ActionTable: React.FC<ActionTableProps> = ({ data, setData }) => {
     setRows(newRows);
   };
 
-  const handleActionChange = (index: number, action: ActionName) => {
-    console.log("ActionTable: index = ", index, ", action = ", action);
+  const handleActionChange = (index: number, action: msb.ActionName) => {
+    console.log('ActionTable: index = ', index, ', action = ', action);
 
     const newRows = [...rows];
     newRows[index].action = action; // create a new object for the row;
@@ -108,7 +111,7 @@ export const ActionTable: React.FC<ActionTableProps> = ({ data, setData }) => {
   };
 
   const handlePropertyChange = (index: number, properties: any) => {
-    console.log("ActionTable: index = ", index, ", properties = ", properties);
+    console.log('ActionTable: index = ', index, ', properties = ', properties);
 
     const newRows = [...rows];
     newRows[index].properties = properties;
@@ -141,11 +144,11 @@ export const ActionTable: React.FC<ActionTableProps> = ({ data, setData }) => {
                 <Select
                   sx={styles.selectField}
                   value={row.action}
-                  onChange={(e) =>
-                    handleActionChange(index, e.target.value as ActionName)
+                  onChange={e =>
+                    handleActionChange(index, e.target.value as msb.ActionName)
                   }
                 >
-                  {Object.values(ActionName).map((action) => (
+                  {Object.values(msb.ActionName).map(action => (
                     <MenuItem key={action} value={action}>
                       {action}
                     </MenuItem>

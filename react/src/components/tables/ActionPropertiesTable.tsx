@@ -1,17 +1,17 @@
 /** import locally for development and testing **/
-import * as msb from "../../../meta-storyboard/src";
+import * as msb from '../../../msb/src';
 /** import from npm library */
 // import * as msb from 'meta-storyboard';
 
-import React, { useState, useEffect, useRef } from "react";
-import { Input, Table, TableBody, TableCell, TableRow } from "@mui/material";
-import * as d3 from "d3";
-import { styled } from "@mui/material/styles";
+import React, { useState, useEffect, useRef } from 'react';
+import { Input, Table, TableBody, TableCell, TableRow } from '@mui/material';
+import * as d3 from 'd3';
+import { styled } from '@mui/material/styles';
 
 // Define styled components to replace makeStyles
 const StyledTable = styled(Table)({
-  width: "100%",
-  borderCollapse: "collapse",
+  width: '100%',
+  borderCollapse: 'collapse',
 });
 
 const StyledTableRow = styled(TableRow)({
@@ -19,40 +19,40 @@ const StyledTableRow = styled(TableRow)({
 });
 
 const StyledTableCell = styled(TableCell)({
-  fontSize: "12px",
-  padding: "2px",
-  border: "none",
+  fontSize: '12px',
+  padding: '2px',
+  border: 'none',
 });
 
 // Style constants to use with sx prop
 const styles = {
   keyCell: {
-    width: "20%",
-    fontSize: "12px",
-    padding: "2px",
-    border: "none",
+    width: '20%',
+    fontSize: '12px',
+    padding: '2px',
+    border: 'none',
   },
   valueCell: {
-    width: "60%",
-    fontSize: "12px",
-    padding: "2px",
-    border: "none",
+    width: '60%',
+    fontSize: '12px',
+    padding: '2px',
+    border: 'none',
   },
   valueInput: {
-    width: "100%",
-    height: "100%",
-    fontSize: "12px",
-    padding: "2px",
-    "& input": {
-      border: "none",
-      outline: "none",
-      padding: "1px",
+    width: '100%',
+    height: '100%',
+    fontSize: '12px',
+    padding: '2px',
+    '& input': {
+      border: 'none',
+      outline: 'none',
+      padding: '1px',
     },
   },
   drawingCell: {
-    width: "10%",
-    padding: "2px",
-    border: "none",
+    width: '10%',
+    padding: '2px',
+    border: 'none',
   },
 };
 
@@ -70,7 +70,7 @@ export const ActionPropertiesTable: React.FC<ActionPropertiesTableProps> = ({
   const [rows, setRows] = useState({ ...data });
   const chartRef = useRef<SVGSVGElement | null>(null);
 
-  const actionFactory = new ActionFactory();
+  const actionFactory = new msb.ActionFactory();
 
   // this effect will trigger whenever data (input argument) changes
   useEffect(() => {
@@ -86,7 +86,7 @@ export const ActionPropertiesTable: React.FC<ActionPropertiesTableProps> = ({
   };
 
   const entries = Object.entries(rows).filter(
-    ([key]) => key !== "id" && key !== "action"
+    ([key]) => key !== 'id' && key !== 'action'
   );
   const totalRows = entries.length;
 
@@ -94,24 +94,24 @@ export const ActionPropertiesTable: React.FC<ActionPropertiesTableProps> = ({
     const margin = { top: 0, right: 0, bottom: 0, left: 0 };
     const height = 75 - margin.top - margin.bottom;
     const width = 100 - margin.left - margin.right;
-    d3.select(chartRef.current).select("svg").remove();
-    const svg = d3.select(chartRef.current).append("svg").node();
+    d3.select(chartRef.current).select('svg').remove();
+    const svg = d3.select(chartRef.current).append('svg').node();
 
-    if (data.action == ActionName.TEXT_BOX) {
+    if (data.action == msb.ActionName.TEXT_BOX) {
       data.width = 80;
-      data.title = "Title";
-      data.message = "Message";
+      data.title = 'Title';
+      data.message = 'Message';
     }
     console.log({ ...data });
     // Cast data to the appropriate props type based on action name
     const action = actionFactory.create(
       data.action,
       data as
-        | CircleProps
-        | ConnectorProps
-        | DotProps
-        | TextBoxProps
-        | PauseProps
+        | msb.CircleProps
+        | msb.ConnectorProps
+        | msb.DotProps
+        | msb.TextBoxProps
+        | msb.PauseProps
     );
     action
       ?.setCanvas(chartRef.current as unknown as SVGGElement)
@@ -124,7 +124,7 @@ export const ActionPropertiesTable: React.FC<ActionPropertiesTableProps> = ({
     return (
       <svg
         ref={chartRef}
-        style={{ width: width, height: height, border: "0px solid" }}
+        style={{ width: width, height: height, border: '0px solid' }}
       ></svg>
     );
   }
@@ -140,7 +140,7 @@ export const ActionPropertiesTable: React.FC<ActionPropertiesTableProps> = ({
                 sx={styles.valueInput}
                 type="text"
                 value={key}
-                onChange={(e) => handleInputChange(key, e.target.value)}
+                onChange={e => handleInputChange(key, e.target.value)}
               />
             </StyledTableCell>
             <StyledTableCell sx={styles.valueCell}>
@@ -149,7 +149,7 @@ export const ActionPropertiesTable: React.FC<ActionPropertiesTableProps> = ({
                 sx={styles.valueInput}
                 type="text"
                 value={value}
-                onChange={(e) => handleInputChange(key, e.target.value)}
+                onChange={e => handleInputChange(key, e.target.value)}
               />
             </StyledTableCell>
           </StyledTableRow>

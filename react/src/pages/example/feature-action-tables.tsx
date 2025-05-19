@@ -1,9 +1,9 @@
 /** import locally for development and testing **/
-// import * as msb from '../../../meta-storyboard/src';
+import * as msb from '../../../msb/src';
 /** import from npm library */
-import * as msb from "meta-storyboard";
+// import * as msb from 'meta-storyboard';
 
-import { useEffect, useState } from "react";
+import { useEffect, useState } from 'react';
 import {
   Button,
   Box,
@@ -12,22 +12,22 @@ import {
   FormControl,
   InputLabel,
   Typography,
-} from "@mui/material";
+} from '@mui/material';
 
-import { FeatureActionTable } from "../../components/tables/FeatureActionTable";
-import covid19NumFATable from "../../assets/feature-action-table/covid-19-numerical-fa-table.json";
-import mlNumFATableMirrored from "../../assets/feature-action-table/ml-numerical-fa-table-line.json";
-import mlNumFATablePCP from "../../assets/feature-action-table/ml-numerical-fa-table-pcp.json";
+import { FeatureActionTable } from '../../components/tables/FeatureActionTable';
+import covid19NumFATable from '../../assets/feature-action-table/covid-19-numerical-fa-table.json';
+import mlNumFATableMirrored from '../../assets/feature-action-table/ml-numerical-fa-table-line.json';
+import mlNumFATablePCP from '../../assets/feature-action-table/ml-numerical-fa-table-pcp.json';
 
 const tableDataMap: any = {
-  "Covid19 Single Location": covid19NumFATable,
-  "ML Provenance": mlNumFATableMirrored,
-  "ML Multivariate": mlNumFATablePCP,
+  'Covid19 Single Location': covid19NumFATable,
+  'ML Provenance': mlNumFATableMirrored,
+  'ML Multivariate': mlNumFATablePCP,
 };
 
 const FeatureActionTablesPage = () => {
   const [data, setData] = useState<msb.FeatureActionTableRow[]>([]);
-  const [selectedTable, setSelectedTable] = useState<string>("");
+  const [selectedTable, setSelectedTable] = useState<string>('');
   const [tables, setTables] = useState<string[]>([]);
 
   useEffect(() => {
@@ -35,7 +35,7 @@ const FeatureActionTablesPage = () => {
       const _tables = Object.keys(tableDataMap) as string[];
       setTables(_tables);
       setSelectedTable(_tables[0]);
-      console.log("tables: ", _tables);
+      console.log('tables: ', _tables);
 
       await fetchTableData(_tables[0]);
     };
@@ -45,18 +45,18 @@ const FeatureActionTablesPage = () => {
 
   const fetchTableData = async (table: string) => {
     try {
-      console.log("table: ", table);
+      console.log('table: ', table);
       const tableData = tableDataMap[table] as msb.FeatureActionTableRow[];
-      console.log("tableData: ", tableData);
+      console.log('tableData: ', tableData);
       setData(tableData);
     } catch (e) {
-      console.error("Failed to fetch table data:", e);
+      console.error('Failed to fetch table data:', e);
     }
   };
 
   const handleTableChange = async (event: any) => {
     setSelectedTable(event.target.value as string);
-    if (event.target.value !== "") {
+    if (event.target.value !== '') {
       fetchTableData(event.target.value as string);
     }
   };
@@ -75,7 +75,7 @@ const FeatureActionTablesPage = () => {
       <Box
         sx={{
           // backgroundColor: 'background.default',
-          minHeight: "100%",
+          minHeight: '100%',
           py: 8,
         }}
       >
@@ -86,13 +86,13 @@ const FeatureActionTablesPage = () => {
 
         <Box
           sx={{
-            display: "flex",
-            alignItems: "center",
-            justifyContent: "space-between",
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'space-between',
             mb: 4,
           }}
         >
-          <Box sx={{ display: "flex", alignItems: "center" }}>
+          <Box sx={{ display: 'flex', alignItems: 'center' }}>
             <FormControl sx={{ width: 200 }}>
               <InputLabel id="table-select-label">Select Table</InputLabel>
               <Select
@@ -102,7 +102,7 @@ const FeatureActionTablesPage = () => {
                 label="Select a Feature-Action Table"
               >
                 <MenuItem value="">Select a table</MenuItem>
-                {tables.map((table) => (
+                {tables.map(table => (
                   <MenuItem key={table} value={table}>
                     {table}
                   </MenuItem>
@@ -111,7 +111,7 @@ const FeatureActionTablesPage = () => {
             </FormControl>
           </Box>
 
-          <Box sx={{ display: "flex", alignItems: "center" }}>
+          <Box sx={{ display: 'flex', alignItems: 'center' }}>
             <Button variant="contained" onClick={handleCreateTable}>
               Create New Table
             </Button>

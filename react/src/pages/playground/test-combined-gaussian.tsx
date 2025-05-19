@@ -1,9 +1,9 @@
 /** import locally for development and testing **/
-import * as msb from "../../../meta-storyboard/src";
+import * as msb from '../../../msb/src';
 /** import from npm library */
 // import * as msb from 'meta-storyboard';
 
-import React, { useEffect, useRef, useState } from "react";
+import React, { useEffect, useRef, useState } from 'react';
 import {
   Box,
   FormControl,
@@ -13,11 +13,11 @@ import {
   OutlinedInput,
   Select,
   Slider,
-} from "@mui/material";
+} from '@mui/material';
 
-import covid19CasesData from "../../assets/data/covid19-cases-data.json";
-import covid19CategoricalFATable from "../../assets/feature-action-table/covid-19-categorical-table.json";
-import covid19NumFATable from "../../assets/feature-action-table/covid-19-numerical-fa-table.json";
+import covid19CasesData from '../../assets/data/covid19-cases-data.json';
+import covid19CategoricalFATable from '../../assets/feature-action-table/covid-19-categorical-table.json';
+import covid19NumFATable from '../../assets/feature-action-table/covid-19-numerical-fa-table.json';
 
 const WIDTH = 1500,
   HEIGHT = 500;
@@ -26,7 +26,7 @@ const TestCombinedGaussianPage = () => {
   const chartRef = useRef(null);
   const [segment, setSegment] = useState<number>(3);
   const [regions, setRegions] = useState<string[]>([]);
-  const [region, setRegion] = useState<string>("");
+  const [region, setRegion] = useState<string>('');
   const [casesData, setCasesData] = useState<
     Record<string, msb.TimeSeriesData>
   >({});
@@ -61,7 +61,7 @@ const TestCombinedGaussianPage = () => {
 
       // 1.2 Get categorical features
       setCategoricalFeatures(
-        covid19CategoricalFATable.map((d) =>
+        covid19CategoricalFATable.map(d =>
           new msb.CategoricalFeature()
             .setDate(new Date(d.date))
             .setRank(d.rank)
@@ -76,9 +76,9 @@ const TestCombinedGaussianPage = () => {
       // prettier-ignore
       console.debug('TestCombinedGaussianPage: numericalFATable: ', numericalFATable);
 
-      setRegion("Bolton");
+      setRegion('Bolton');
     } catch (error) {
-      console.error("Failed to fetch data; error:", error);
+      console.error('Failed to fetch data; error:', error);
     }
   }, []);
 
@@ -91,22 +91,26 @@ const TestCombinedGaussianPage = () => {
     // --- Test individual Gaussian generation functions ---
     //
 
-    const peakGauss: msb.TimeSeriesData[] = msb.generateGaussForPeaks(data);
+    const peakGauss: msb.TimeSeriesData[] =
+      msb.Gaussian.generateGaussForPeaks(data);
     const catagoricalFeatureGauss: msb.TimeSeriesData[] =
-      msb.generateGaussForCategoricalFeatures(data, categoricalFeatures);
-    const peakGaussBounds: msb.TimeSeriesData = msb.maxAcrossSeries(
+      msb.Gaussian.generateGaussForCategoricalFeatures(
+        data,
+        categoricalFeatures
+      );
+    const peakGaussBounds: msb.TimeSeriesData = msb.Gaussian.maxAcrossSeries(
       data,
       peakGauss
     );
     const catagoricalFeatureGaussBounds: msb.TimeSeriesData =
-      msb.maxAcrossSeries(data, catagoricalFeatureGauss);
+      msb.Gaussian.maxAcrossSeries(data, catagoricalFeatureGauss);
 
     // prettier-ignore
     console.debug('TestCombinedGaussianPage: peakGaussBounds:', peakGaussBounds);
     // prettier-ignore
     console.debug('TestCombinedGaussianPage: catagoricalFeatureGaussBounds:', catagoricalFeatureGaussBounds);
 
-    let combinedGauss1: msb.TimeSeriesData = msb.combineSeries(data, [
+    let combinedGauss1: msb.TimeSeriesData = msb.Gaussian.combineSeries(data, [
       peakGaussBounds,
       catagoricalFeatureGaussBounds,
     ]);
@@ -119,8 +123,8 @@ const TestCombinedGaussianPage = () => {
     // single gmm function to generate and combine Gaussian series
     //
 
-    const combinedGauss2 = msb.gmm(data, categoricalFeatures);
-    console.debug("TestCombinedGaussianPage: combinedGauss2:", combinedGauss2);
+    const combinedGauss2 = msb.Gaussian.gmm(data, categoricalFeatures);
+    console.debug('TestCombinedGaussianPage: combinedGauss2:', combinedGauss2);
 
     //
     // --- Test segmentation - we have two functions implemented slightly differently ---
@@ -152,7 +156,7 @@ const TestCombinedGaussianPage = () => {
     */
 
     // Option-3: Using segmentByPeaks
-    const segmentedGaussianPeakPoints = msb.segmentByPeaks(
+    const segmentedGaussianPeakPoints = msb.Utils.segmentByPeaks(
       combinedGauss2,
       segment
     );
@@ -160,20 +164,20 @@ const TestCombinedGaussianPage = () => {
     console.debug('TestCombinedGaussianPage: segmentedGaussianPeakPoints:', segmentedGaussianPeakPoints);
 
     // Find categorical features at segmentation points
-    const catFeaturesAtSegments = segmentedGaussianPeakPoints.map((point) => {
-      let catFeature = msb.findClosestCategoricalFeature(
+    const catFeaturesAtSegments = segmentedGaussianPeakPoints.map(point => {
+      let catFeature = msb.Search.findClosestCategoricalFeature(
         categoricalFeatures,
         point.date
       );
 
-      let numFeature = msb.findClosestNumericalFeature(
-        msb.searchPeaks(data, 0, ""),
+      let numFeature = msb.Search.findClosestNumericalFeature(
+        msb.Search.searchPeaks(data, 0, ''),
         point.date
       );
 
-      let closestFeature = msb.findClosestFeature(
+      let closestFeature = msb.Search.findClosestFeature(
         categoricalFeatures,
-        msb.searchPeaks(data, 0, ""),
+        msb.Search.searchPeaks(data, 0, ''),
         point.date
       );
 
@@ -184,7 +188,7 @@ const TestCombinedGaussianPage = () => {
     // prettier-ignore
     console.debug('TestCombinedGaussianPage: catFeaturesAtSegments:', catFeaturesAtSegments);
 
-    const numFeaturesAtSegments = segmentedGaussianPeakPoints.map((point) => {
+    const numFeaturesAtSegments = segmentedGaussianPeakPoints.map(point => {
       return {
         segmentIndex: point.idx,
         date: point.date,
@@ -206,16 +210,16 @@ const TestCombinedGaussianPage = () => {
         combinedGauss1,
       ])
       .setPlotProps({
-        xLabel: "Date",
+        xLabel: 'Date',
         title: `${region}`,
-        leftAxisLabel: "Number of cases",
-        rightAxisLabel: "Rank",
+        leftAxisLabel: 'Number of cases',
+        rightAxisLabel: 'Rank',
       } as any)
       .setLineProps(
         combinedGauss1.map((d, i) => {
           if (i === 0) {
             return {
-              stroke: "#D3D3D3",
+              stroke: '#D3D3D3',
               strokeWidth: 2,
               showPoints: false,
             } as any;
@@ -233,14 +237,14 @@ const TestCombinedGaussianPage = () => {
       .plot();
 
     // show peaks for debugging purpose
-    const peaks: msb.Peak[] = msb.searchPeaks(data);
+    const peaks: msb.Peak[] = msb.Search.searchPeaks(data);
     peaks.forEach((d: msb.Peak, i: number) => {
       if (!chartRef.current) return;
 
       new msb.Dot()
         .setProps({
           size: 4,
-          color: "blue",
+          color: 'blue',
           opacity: 0.5,
         } as any)
         .setCanvas(chartRef.current)
@@ -249,12 +253,12 @@ const TestCombinedGaussianPage = () => {
     });
 
     // Visualize segmentation points from method 1
-    segmentedGaussianPeakPoints.forEach((point) => {
+    segmentedGaussianPeakPoints.forEach(point => {
       if (!chartRef.current) return;
       new msb.Circle()
         .setProps({
           size: 8,
-          color: "blue",
+          color: 'blue',
           opacity: 1,
         } as any)
         .setCanvas(chartRef.current)
@@ -262,7 +266,7 @@ const TestCombinedGaussianPage = () => {
         .show();
 
       // If there's a categorical feature at this point, add a label or different visualization
-      const feature = msb.findCategoricalFeatureByDate(
+      const feature = msb.Search.findClosestCategoricalFeature(
         categoricalFeatures,
         point.date
       );
@@ -270,7 +274,7 @@ const TestCombinedGaussianPage = () => {
         new msb.Circle()
           .setProps({
             size: 12,
-            color: "green",
+            color: 'green',
             opacity: 1,
           } as any)
           .setCanvas(chartRef.current)
@@ -327,8 +331,8 @@ const TestCombinedGaussianPage = () => {
     _event: React.SyntheticEvent | Event,
     value: number | number[]
   ) => {
-    const selectedSegment = typeof value === "number" ? value : value[0];
-    console.log("segment = ", selectedSegment);
+    const selectedSegment = typeof value === 'number' ? value : value[0];
+    console.log('segment = ', selectedSegment);
     if (selectedSegment !== undefined && selectedSegment !== segment) {
       setSegment(selectedSegment);
     }
@@ -340,16 +344,16 @@ const TestCombinedGaussianPage = () => {
 
       <Box
         sx={{
-          minHeight: "100%",
+          minHeight: '100%',
           py: 8,
         }}
       >
         <FormGroup
           sx={{
             flexDirection: {
-              xs: "column",
-              sm: "row",
-              alignItems: "center",
+              xs: 'column',
+              sm: 'row',
+              alignItems: 'center',
             },
           }}
         >
@@ -365,7 +369,7 @@ const TestCombinedGaussianPage = () => {
               value={region}
               input={<OutlinedInput label="Select region" />}
             >
-              {regions?.map((d) => (
+              {regions?.map(d => (
                 <MenuItem key={d} value={d}>
                   {d}
                 </MenuItem>
@@ -396,7 +400,7 @@ const TestCombinedGaussianPage = () => {
             style={{
               width: `${WIDTH}px`,
               height: `${HEIGHT}px`,
-              border: "1px solid",
+              border: '1px solid',
             }}
           ></svg>
         </FormGroup>

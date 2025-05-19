@@ -1,1 +1,1 @@
-export * from "./FeatureActionTable";
+export * from './FeatureActionTable';

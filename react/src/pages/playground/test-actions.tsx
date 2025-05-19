@@ -1,11 +1,11 @@
 /** import locally for development and testing **/
-import * as msb from "../../../meta-storyboard/src";
+import * as msb from '../../../msb/src';
 /** import from npm library */
 // import * as msb from 'meta-storyboard';
 
-import { useEffect, useRef } from "react";
-import Head from "next/head";
-import { Box } from "@mui/material";
+import { useEffect, useRef } from 'react';
+import Head from 'next/head';
+import { Box } from '@mui/material';
 
 const TestActionsPage = () => {
   const chartRef = useRef(null);
@@ -31,7 +31,7 @@ const TestActionsPage = () => {
       const dot = new msb.Dot()
         .setProps({
           size: 5,
-          color: "#FF0000",
+          color: '#FF0000',
           opacity: 0.5,
         } as any)
         .setCanvas(chartRef.current)
@@ -41,7 +41,7 @@ const TestActionsPage = () => {
       const circle = new msb.Circle()
         .setProps({
           size: 10,
-          color: "green",
+          color: 'green',
           opacity: 1,
         } as any)
         .setCanvas(chartRef.current)
@@ -50,12 +50,12 @@ const TestActionsPage = () => {
 
       const textBox1 = new msb.TextBox()
         .setProps({
-          title: "17-02-2024",
+          title: '17-02-2024',
           message:
-            "By 17-02-2024, the number of cases continued to climb higher in Oxford.",
-          horizontalAlign: "right",
-          verticalAlign: "top",
-          backgroundColor: "lightgrey",
+            'By 17-02-2024, the number of cases continued to climb higher in Oxford.',
+          horizontalAlign: 'right',
+          verticalAlign: 'top',
+          backgroundColor: 'lightgrey',
         } as any)
         .setCanvas(chartRef.current)
         .setCoordinate([src, dst1])
@@ -72,9 +72,9 @@ const TestActionsPage = () => {
       //
 
       const textbox2 = new msb.TextBox().setProps({
-        horizontalAlign: "right",
-        verticalAlign: "top",
-        backgroundColor: "lightgrey",
+        horizontalAlign: 'right',
+        verticalAlign: 'top',
+        backgroundColor: 'lightgrey',
         width: 100,
       } as any);
       const actions = [
@@ -112,13 +112,13 @@ const TestActionsPage = () => {
       <Box
         sx={{
           // backgroundColor: "background.default",
-          minHeight: "100%",
+          minHeight: '100%',
           py: 8,
         }}
       >
         <svg
           ref={chartRef}
-          style={{ width: width, height: height, border: "1px solid" }}
+          style={{ width: width, height: height, border: '1px solid' }}
         ></svg>
       </Box>
     </>

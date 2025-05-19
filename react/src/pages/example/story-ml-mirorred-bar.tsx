@@ -1,9 +1,9 @@
 /** import locally for development and testing **/
-import * as msb from "../../../meta-storyboard/src";
+import * as msb from '../../../msb/src';
 /** import from npm library */
 // import * as msb from "meta-storyboard";
 
-import { useEffect, useState, useRef } from "react";
+import { useEffect, useState, useRef } from 'react';
 import {
   Box,
   Avatar,
@@ -19,33 +19,33 @@ import {
   OutlinedInput,
   Select,
   Fade,
-} from "@mui/material";
-import type { SelectChangeEvent } from "@mui/material/Select";
-import AutoStoriesIcon from "@mui/icons-material/AutoStories";
-import ArrowBackIosIcon from "@mui/icons-material/ArrowBackIos";
-import ArrowForwardIosIcon from "@mui/icons-material/ArrowForwardIos";
-import PauseIcon from "@mui/icons-material/Pause";
-import { blue } from "@mui/material/colors";
+} from '@mui/material';
+import type { SelectChangeEvent } from '@mui/material/Select';
+import AutoStoriesIcon from '@mui/icons-material/AutoStories';
+import ArrowBackIosIcon from '@mui/icons-material/ArrowBackIos';
+import ArrowForwardIosIcon from '@mui/icons-material/ArrowForwardIos';
+import PauseIcon from '@mui/icons-material/Pause';
+import { blue } from '@mui/material/colors';
 
-import { useControllerWithState } from "../useControllerWithState";
-import mlTrainingData from "../../assets/data/ml-training-data.json";
-import mlNumFATable from "../../assets/feature-action-table/ml-numerical-fa-table-pcp.json";
+import { useControllerWithState } from '../useControllerWithState';
+import mlTrainingData from '../../assets/data/ml-training-data.json';
+import mlNumFATable from '../../assets/feature-action-table/ml-numerical-fa-table-pcp.json';
 
 const StoryMLMirroredBar = () => {
   const WIDTH = 1200,
     HEIGHT = 600;
   const HYPERPARAMS = [
-    "channels",
-    "kernel_size",
-    "layers",
-    "samples_per_class",
+    'channels',
+    'kernel_size',
+    'layers',
+    'samples_per_class',
   ];
 
   const chartRefLine = useRef<SVGSVGElement>(null);
   const chartRefMirrored = useRef<SVGSVGElement>(null);
 
   const [loading, setLoading] = useState<boolean>(false);
-  const [selectedHyperparam, setSelectedHyperparam] = useState<string>("");
+  const [selectedHyperparam, setSelectedHyperparam] = useState<string>('');
   const [mlData, setMLData] = useState<msb.TimeSeriesData>([]);
   const [numericalFATable, setNumericalFATable] = useState<any>({});
 
@@ -74,9 +74,9 @@ const StoryMLMirroredBar = () => {
     // 1.2 Load feature-action table
     setNumericalFATable(mlNumFATable);
 
-    console.log("ML data: ", mlData);
-    console.log("Numerical feature-action table data: ", numericalFATable);
-    setSelectedHyperparam("channels");
+    console.log('ML data: ', mlData);
+    console.log('Numerical feature-action table data: ', numericalFATable);
+    setSelectedHyperparam('channels');
     setLoading(false);
   }, []);
 
@@ -90,7 +90,7 @@ const StoryMLMirroredBar = () => {
       return;
 
     let data = msb.sortTimeseriesData(mlData, selectedHyperparam);
-    const y1AxisName = "mean_test_accuracy";
+    const y1AxisName = 'mean_test_accuracy';
     const y2AxisName = selectedHyperparam;
 
     console.log(`Selected hyperparameter ${selectedHyperparam}'s data:`, data);
@@ -99,18 +99,18 @@ const StoryMLMirroredBar = () => {
 
     // 2. Create timeline actions
     const timelineActions: msb.TimelineAction[] = new msb.FeatureActionFactory()
-      .setProps({ metric: "accuracy", window: 0 })
+      .setProps({ metric: 'accuracy', window: 0 })
       .setData(data) // <- timeseries data
       .setNumericalFeatures(numericalFATable) // <- feature-action table
       .create();
 
     // 3. Create line plot
     linePlot
-      .setData([data.map((d) => ({ ...d, y: d[y1AxisName] }))]) // <- timeseries data
+      .setData([data.map(d => ({ ...d, y: d[y1AxisName] }))]) // <- timeseries data
       .setName(selectedHyperparam) // <- selected hyperparam
       .setPlotProps({
         title: `${selectedHyperparam}`,
-        xLabel: "Date",
+        xLabel: 'Date',
         leftAxisLabel: y1AxisName,
       } as any)
       .setLineProps([])
@@ -152,8 +152,8 @@ const StoryMLMirroredBar = () => {
 
       <Box
         sx={{
-          backgroundColor: "background.default",
-          minHeight: "100%",
+          backgroundColor: 'background.default',
+          minHeight: '100%',
           py: 8,
         }}
       >
@@ -167,13 +167,13 @@ const StoryMLMirroredBar = () => {
             title="Story: Machine Learning Provenance"
             subheader="Choose a hyperparameter, and click play to animate the story. ()"
           />
-          <CardContent sx={{ pt: "8px" }}>
+          <CardContent sx={{ pt: '8px' }}>
             {loading ? (
               <Box sx={{ height: 40 }}>
                 <Fade
                   in={loading}
                   style={{
-                    transitionDelay: loading ? "800ms" : "0ms",
+                    transitionDelay: loading ? '800ms' : '0ms',
                   }}
                   unmountOnExit
                 >
@@ -185,9 +185,9 @@ const StoryMLMirroredBar = () => {
                 <FormGroup
                   sx={{
                     flexDirection: {
-                      xs: "column",
-                      sm: "row",
-                      alignItems: "center",
+                      xs: 'column',
+                      sm: 'row',
+                      alignItems: 'center',
                     },
                   }}
                 >
@@ -203,7 +203,7 @@ const StoryMLMirroredBar = () => {
                       value={selectedHyperparam}
                       input={<OutlinedInput label="Select hyperparameter" />}
                     >
-                      {HYPERPARAMS.map((d) => (
+                      {HYPERPARAMS.map(d => (
                         <MenuItem key={d} value={d}>
                           {d}
                         </MenuItem>
@@ -238,7 +238,7 @@ const StoryMLMirroredBar = () => {
                     <Button
                       disabled={!selectedHyperparam}
                       variant="contained"
-                      color={isPlaying ? "secondary" : "primary"}
+                      color={isPlaying ? 'secondary' : 'primary'}
                       // 4. Play/pause button
                       onClick={() => controller.togglePlayPause()}
                       endIcon={
@@ -246,15 +246,15 @@ const StoryMLMirroredBar = () => {
                       }
                       sx={{ width: 120 }}
                     >
-                      {isPlaying ? "Pause" : "Play"}
+                      {isPlaying ? 'Pause' : 'Play'}
                     </Button>
                   </FormControl>
                 </FormGroup>
                 <div
                   style={{
-                    display: "flex",
-                    flexDirection: "column",
-                    alignItems: "left",
+                    display: 'flex',
+                    flexDirection: 'column',
+                    alignItems: 'left',
                   }}
                 >
                   <svg
@@ -262,8 +262,8 @@ const StoryMLMirroredBar = () => {
                     style={{
                       width: WIDTH,
                       height: HEIGHT * 0.7,
-                      border: "0px solid",
-                      marginBottom: "-50px",
+                      border: '0px solid',
+                      marginBottom: '-50px',
                     }}
                   ></svg>
                   <svg
@@ -271,8 +271,8 @@ const StoryMLMirroredBar = () => {
                     style={{
                       width: WIDTH,
                       height: HEIGHT,
-                      border: "0px solid",
-                      marginTop: "-50px",
+                      border: '0px solid',
+                      marginTop: '-50px',
                     }}
                   ></svg>
                 </div>
