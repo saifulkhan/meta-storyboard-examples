@@ -1,0 +1,3 @@
+[submodule "react/msb"]
+	path = react/msb
+	url = git@github.com:saifulkhan/meta-storyboard.git
