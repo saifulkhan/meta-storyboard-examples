@@ -1,9 +1,6 @@
 import React, { useState } from 'react';
 
-// local import
-import * as msb from '../..';
-// import from npm library
-// import * as msb from 'meta-storyboard';
+import { FeaturePropertiesTable } from '../../components/tables/FeaturePropertiesTable';
 
 const TestFeaturePropertiesTablePage = () => {
   const [data, setData] = useState<Record<string, any>>({
@@ -14,7 +11,7 @@ const TestFeaturePropertiesTablePage = () => {
 
   return (
     <>
-      <msb.FeaturePropertiesTable data={data} setData={setData} />
+      <FeaturePropertiesTable data={data} setData={setData} />
     </>
   );
 };

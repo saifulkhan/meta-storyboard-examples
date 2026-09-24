@@ -28,7 +28,7 @@ import ArrowForwardIosIcon from '@mui/icons-material/ArrowForwardIos';
 import PauseIcon from '@mui/icons-material/Pause';
 import { blue } from '@mui/material/colors';
 
-import { useControllerWithState } from '../useControllerWithState';
+import { useControllerWithState } from '../../hooks/useControllerWithState';
 import mlTrainingData from '../../assets/data/ml-training-data.json';
 import mlNumFATable from '../../assets/feature-action-table/ml-numerical-fa-table-pcp.json';
 

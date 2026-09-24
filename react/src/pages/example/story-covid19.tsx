@@ -27,7 +27,7 @@ import ArrowForwardIosIcon from '@mui/icons-material/ArrowForwardIos';
 import PauseIcon from '@mui/icons-material/Pause';
 import { blue } from '@mui/material/colors';
 
-import { useControllerWithState } from '../useControllerWithState';
+import { useControllerWithState } from '../../hooks/useControllerWithState';
 import covid19CasesData from '../../assets/data/covid19-cases-data.json';
 import covid19NumFATable from '../../assets/feature-action-table/covid-19-numerical-fa-table.json';
 

@@ -1,7 +1,7 @@
 import React, { useRef, useState, useEffect } from 'react';
 import { Button, Box, Typography } from '@mui/material';
 
-import { useControllerWithState } from '../useControllerWithState';
+import { useControllerWithState } from '../../hooks/useControllerWithState';
 
 class Loop {
   public onFrame?: () => void;
