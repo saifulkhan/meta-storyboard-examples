@@ -20,6 +20,10 @@ const exampleStories: PageLink[] = [
     title: 'Machine Learning Multivariate Story',
     path: '/example/story-ml-pcp',
   },
+  {
+    title: 'Machine Learning Dashboard Story',
+    path: '/example/story-ml-dashboard',
+  },
   { title: 'Feature-Action Tables', path: '/example/feature-action-tables' },
 ];
 

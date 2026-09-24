@@ -1,0 +1,28 @@
+[
+  {
+    "feature": "MAX",
+    "properties": {},
+    "rank": 7,
+    "actions": [
+      {
+        "action": "CIRCLE",
+        "properties": {
+          "size": 11,
+          "strokeWidth": 3,
+          "opacity": 1,
+          "color": "#228B22",
+          "hide": false
+        }
+      },
+      {
+        "action": "DOT",
+        "properties": {
+          "size": 4,
+          "opacity": 1,
+          "color": "#006400",
+          "hide": false
+        }
+      }
+    ]
+  }
+]

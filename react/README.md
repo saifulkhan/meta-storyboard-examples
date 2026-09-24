@@ -41,6 +41,7 @@ Open [http://localhost:3000](http://localhost:3000) in your browser. Go to the s
 - [COVID-19 Case Story (Gaussian)](http://localhost:3000/example/story-covid19-gaussian)
 - [Machine Learning Provenance Story](http://localhost:3000/example/story-ml-mirorred-bar)
 - [Machine Learning Multivariate Story](http://localhost:3000/example/story-ml-pcp)
+- [Machine Learning Dashboard Story](http://localhost:3000/example/story-ml-dashboard)
 
 ### Example Feature-Action Tables
 
