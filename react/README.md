@@ -77,14 +77,7 @@ The examples are published at
 [https://saifulkhan.github.io/meta-storyboard-examples/](https://saifulkhan.github.io/meta-storyboard-examples/).
 
 Every push to the `main` branch rebuilds and redeploys the site automatically
-via the GitHub Actions workflow `.github/workflows/deploy.yml`. You can also
-trigger a redeploy without pushing: go to the repository's **Actions** tab,
-select **Deploy to GitHub Pages**, and click **Run workflow**.
-
-The example pages import the library from the `react/msb` submodule source,
-and the workflow checks out the submodule at the commit recorded in this
-repository. So if you changed the library, publish it first and bump the
-submodule pointer:
+via the GitHub Actions.
 
 ```bash
 # 1. publish the library changes
