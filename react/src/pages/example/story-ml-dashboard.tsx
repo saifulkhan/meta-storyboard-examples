@@ -71,7 +71,7 @@ const StoryMLDashboard = () => {
   // control both plots together
   const [controller, isPlaying] = useControllerWithState(
     msb.SyncPlotsController,
-    [detailPlot, contextPlot]
+    [[detailPlot, contextPlot]]
   );
 
   useEffect(() => {

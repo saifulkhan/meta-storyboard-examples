@@ -70,3 +70,42 @@ The example components are useful for testing and developing various individual 
 - [Test Feature Properties Table](http://localhost:3000/playground/test-feature-properties-table)
 - [Test Action Table](http://localhost:3000/playground/test-action-table)
 - [Feature-Action Tables UI (experimental)](http://localhost:3000/example/feature-action-tables)
+
+## Rebuild & Publish (GitHub Pages)
+
+The examples are published at
+[https://saifulkhan.github.io/meta-storyboard-examples/](https://saifulkhan.github.io/meta-storyboard-examples/).
+
+Every push to the `main` branch rebuilds and redeploys the site automatically
+via the GitHub Actions workflow `.github/workflows/deploy.yml`. You can also
+trigger a redeploy without pushing: go to the repository's **Actions** tab,
+select **Deploy to GitHub Pages**, and click **Run workflow**.
+
+The example pages import the library from the `react/msb` submodule source,
+and the workflow checks out the submodule at the commit recorded in this
+repository. So if you changed the library, publish it first and bump the
+submodule pointer:
+
+```bash
+# 1. publish the library changes
+cd react/msb
+git add -A && git commit -m "..."
+git push origin main
+
+# 2. record the new submodule commit and publish the site
+cd ../..
+git add react/msb
+git commit -m "chore: bump msb submodule"
+git push origin main
+```
+
+To test the static export locally before publishing:
+
+```bash
+cd react
+GITHUB_PAGES=true yarn build   # writes the static site to react/out
+```
+
+Note that the exported site expects to be served under the
+`/meta-storyboard-examples` base path (as on GitHub Pages), so links will not
+resolve if you open `out/index.html` directly.

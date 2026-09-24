@@ -51,7 +51,7 @@ const StoryMLPCP = () => {
   const plot = useRef(new msb.ParallelCoordinatePlot()).current;
   const [controller, isPlaying] = useControllerWithState(
     msb.PlayPauseController,
-    plot
+    [plot]
   );
 
   useEffect(() => {
@@ -85,7 +85,7 @@ const StoryMLPCP = () => {
       plot.reset();
     }
 
-    const data = msb.sortTimeseriesData(mlData, hyperparam);
+    const data = msb.sortTimeseriesData(mlData, hyperparam, 'mean_test_accuracy');
     console.log(`Selected hyperparameter ${hyperparam}'s data: ${data}`);
 
     // build story based on selected hyperparameter's data and feature-action table

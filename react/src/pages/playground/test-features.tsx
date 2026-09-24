@@ -103,7 +103,7 @@ const FeaturesPage = () => {
         // Add null check for chartRef.current
         if (chartRef.current) {
           new msb.Dot()
-            .setProps({ color: '#FF5349' } as any)
+            .setProps({ color: '#FF5349' })
             .setCanvas(chartRef.current)
             .setCoordinate(plot.getCoordinates(peak.getDate()))
             .show();

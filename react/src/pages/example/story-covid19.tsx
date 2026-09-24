@@ -48,7 +48,7 @@ const StoryCovid19Single = () => {
   // use the correct controller name for animation synchronization
   const [controller, isPlaying] = useControllerWithState(
     msb.SyncPlotsController,
-    [plot]
+    [[plot]]
   );
 
   useEffect(() => {

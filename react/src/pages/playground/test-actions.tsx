@@ -62,7 +62,7 @@ const TestActionsPage = () => {
         .show();
 
       const connector = new msb.Connector()
-        .setProps({} as any)
+        .setProps({})
         .setCanvas(chartRef.current)
         .setCoordinate([src, dst])
         .show();
@@ -78,8 +78,8 @@ const TestActionsPage = () => {
         width: 100,
       } as any);
       const actions = [
-        new msb.Dot().setProps({} as any),
-        new msb.Circle().setProps({} as any),
+        new msb.Dot().setProps({}),
+        new msb.Circle().setProps({}),
         textbox2,
       ];
 

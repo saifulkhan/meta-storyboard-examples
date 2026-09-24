@@ -54,7 +54,7 @@ const StoryCovid19Gaussian = () => {
   const plot = useRef(new msb.LinePlot()).current;
   const [controller, isPlaying] = useControllerWithState(
     msb.PlayPauseController,
-    plot
+    [plot]
   );
 
   useEffect(() => {

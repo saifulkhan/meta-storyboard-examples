@@ -54,7 +54,7 @@ const StoryMLMirroredBar = () => {
   // control both plots together
   const [controller, isPlaying] = useControllerWithState(
     msb.SyncPlotsController,
-    [linePlot, mirroredBarChart]
+    [[linePlot, mirroredBarChart]]
   );
   // test control each plot separately
   // const [controller, isPlaying] = useControllerWithState(msb.PlayPauseController, [mirroredBarChart]);
@@ -89,7 +89,7 @@ const StoryMLMirroredBar = () => {
     )
       return;
 
-    let data = msb.sortTimeseriesData(mlData, selectedHyperparam);
+    let data = msb.sortTimeseriesData(mlData, selectedHyperparam, 'mean_test_accuracy');
     const y1AxisName = 'mean_test_accuracy';
     const y2AxisName = selectedHyperparam;
 
@@ -124,7 +124,7 @@ const StoryMLMirroredBar = () => {
       .setPlotProps({
         y1Label: y1AxisName,
         y2Label: y2AxisName,
-      } as any)
+      })
       .setName(selectedHyperparam)
       .setData(data)
       .setCanvas(chartRefMirrored.current)

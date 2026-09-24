@@ -106,12 +106,7 @@ export const ActionPropertiesTable: React.FC<ActionPropertiesTableProps> = ({
     // Cast data to the appropriate props type based on action name
     const action = actionFactory.create(
       data.action,
-      data as
-        | msb.CircleProps
-        | msb.ConnectorProps
-        | msb.DotProps
-        | msb.TextBoxProps
-        | msb.PauseProps
+      data as msb.AnyActionProps
     );
     action
       ?.setCanvas(chartRef.current as unknown as SVGGElement)

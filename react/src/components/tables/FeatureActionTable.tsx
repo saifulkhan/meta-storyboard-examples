@@ -15,7 +15,10 @@ import AddIcon from '@mui/icons-material/Add';
 import RemoveIcon from '@mui/icons-material/Remove';
 import { styled } from '@mui/material/styles';
 
-import * as msb from 'meta-storyboard';
+/** import locally for development and testing **/
+import * as msb from '../../../msb/src';
+/** import from npm library */
+// import * as msb from 'meta-storyboard';
 import { FeaturePropertiesTable } from './FeaturePropertiesTable';
 import { ActionTable } from './ActionTable';
 

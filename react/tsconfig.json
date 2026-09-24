@@ -35,6 +35,9 @@
     "**/*.tsx"
   ],
   "exclude": [
-    "node_modules"
+    "node_modules",
+    "msb/node_modules",
+    "msb/dist",
+    "msb/src/__tests__"
   ]
 }

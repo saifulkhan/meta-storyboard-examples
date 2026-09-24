@@ -10,6 +10,9 @@ const basePath = "/meta-storyboard-examples";
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   reactStrictMode: true,
+  // allow building/serving from a separate dist dir, e.g., while a dev server
+  // is using .next (NEXT_DIST_DIR=.next-prod yarn build && ... yarn start)
+  distDir: process.env.NEXT_DIST_DIR || '.next',
   ...(isGithubPages && {
     output: "export",
     basePath,
@@ -17,11 +20,8 @@ const nextConfig = {
     trailingSlash: true,
     images: { unoptimized: true },
   }),
-  // the msb submodule and a few pages have pre-existing type/lint errors that
-  // don't affect runtime (the dev server serves them fine); don't let them
-  // block the production build. run `yarn type-check` / `yarn lint` to see them.
   typescript: {
-    ignoreBuildErrors: true,
+    ignoreBuildErrors: false,
   },
   eslint: {
     ignoreDuringBuilds: true,
@@ -30,6 +30,17 @@ const nextConfig = {
     emotion: true,
   },
   webpack(config) {
+    // the msb submodule has its own node_modules (dev dependencies); force a
+    // single react and d3 instance resolved from this app to avoid duplicate
+    // react copies breaking hooks
+    const path = require('path');
+    config.resolve.alias = {
+      ...config.resolve.alias,
+      react: path.resolve(__dirname, 'node_modules/react'),
+      'react-dom': path.resolve(__dirname, 'node_modules/react-dom'),
+      d3: path.resolve(__dirname, 'node_modules/d3'),
+    };
+
     config.module.rules.push({
       test: /\.svg$/,
       use: [{
