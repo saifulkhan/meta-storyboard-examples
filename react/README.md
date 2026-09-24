@@ -13,12 +13,15 @@ Clone the repository.
 
 ```bash
 git clone https://github.com/saifulkhan/meta-storyboard-examples
-cd meta-storyboard-examples/react
+cd meta-storyboard-examples
+git submodule update --init --recursive   
 ```
 
 Install the meta-storyboard library from NPM.
 
 ```bash
+cd react
+
 npm install meta-storyboard # or
 yarn add meta-storyboard
 ```
@@ -30,11 +33,11 @@ yarn install
 yarn dev
 ```
 
-Open <http://localhost:3000> in your browser. Go to the section [UI](#ui) to see a few examples. These are the following list of UIs:
+Open [http://localhost:3000](http://localhost:3000) in your browser. Go to the section [UI](#ui) to see a few examples. These are the following list of UIs:
 
 ### Example Stories
 
-- [COVID-19 Case Story](http://localhost:3000/example/story-covid19-single)
+- [COVID-19 Case Story](http://localhost:3000/example/story-covid19)
 - [COVID-19 Case Story (Gaussian)](http://localhost:3000/example/story-covid19-gaussian)
 - [Machine Learning Provenance Story](http://localhost:3000/example/story-ml-mirorred-bar)
 - [Machine Learning Multivariate Story](http://localhost:3000/example/story-ml-pcp)
