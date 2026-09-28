@@ -1,6 +1,7 @@
 import type { ReactNode } from 'react';
 import type { NextPage } from 'next';
 import type { AppProps } from 'next/app';
+import CssBaseline from '@mui/material/CssBaseline';
 
 type GetLayout = (page: ReactNode) => ReactNode;
 
@@ -15,7 +16,12 @@ type MyAppProps<P = {}> = AppProps<P> & {
 function App({ Component, pageProps }: MyAppProps) {
   const getLayout = Component.getLayout ?? ((page: ReactNode) => page);
 
-  return getLayout(<Component {...pageProps} />);
+  return (
+    <>
+      <CssBaseline />
+      {getLayout(<Component {...pageProps} />)}
+    </>
+  );
 }
 
 export default App;
