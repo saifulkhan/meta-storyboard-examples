@@ -78,7 +78,11 @@ const IndexPage = () => {
         <Link href="https://www.npmjs.com/package/meta-storyboard">
           meta-storyboard
         </Link>{' '}
-        library.
+        library. See the{' '}
+        <Link href="https://saifulkhan.github.io/meta-storyboard/">
+          documentation
+        </Link>{' '}
+        for the getting-started guide and API design.
       </Typography>
 
       <Divider sx={{ my: 2 }} />

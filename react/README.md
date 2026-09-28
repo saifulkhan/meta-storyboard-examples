@@ -1,6 +1,6 @@
 # About
 
-This repository contains a few examples of how to use the meta-storyboard library [NPM](https://www.npmjs.com/package/meta-storyboard).
+This repository contains a few examples of how to use the meta-storyboard library [NPM](https://www.npmjs.com/package/meta-storyboard). See the [documentation](https://saifulkhan.github.io/meta-storyboard/) for the getting-started guide and API design.
 
 ## Getting Started
 
@@ -14,7 +14,7 @@ Clone the repository.
 ```bash
 git clone https://github.com/saifulkhan/meta-storyboard-examples
 cd meta-storyboard-examples
-git submodule update --init --recursive   
+git submodule update --init --recursive
 ```
 
 Install the meta-storyboard library from NPM.
