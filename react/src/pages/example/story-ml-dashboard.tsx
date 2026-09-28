@@ -5,14 +5,9 @@ import * as msb from '../../../msb/src';
 
 import { useEffect, useMemo, useRef, useState } from 'react';
 import {
-  Avatar,
   Box,
   Button,
-  Card,
-  CardContent,
-  CardHeader,
   FormControl,
-  FormGroup,
   InputLabel,
   MenuItem,
   OutlinedInput,
@@ -21,12 +16,13 @@ import {
   Stack,
 } from '@mui/material';
 import type { SelectChangeEvent } from '@mui/material/Select';
-import AutoStoriesIcon from '@mui/icons-material/AutoStories';
 import ArrowBackIosIcon from '@mui/icons-material/ArrowBackIos';
 import ArrowForwardIosIcon from '@mui/icons-material/ArrowForwardIos';
+import DashboardIcon from '@mui/icons-material/Dashboard';
 import PauseIcon from '@mui/icons-material/Pause';
 import { blue } from '@mui/material/colors';
 
+import { ExampleLayout } from '../../components/ExampleLayout';
 import { useControllerWithState } from '../../hooks/useControllerWithState';
 import { MetricCard } from '../../components/dashboard/MetricCard';
 import mlTrainingData from '../../assets/data/ml-training-data.json';
@@ -183,144 +179,127 @@ const StoryMLDashboard = () => {
   };
 
   return (
-    <>
-      <title key="title">Story | ML Dashboard</title>
+    <ExampleLayout
+      title="Machine Learning Dashboard Story"
+      subtitle="Multiple synchronized plots combined into a single animated dashboard. Choose a hyperparameter and press play."
+      chip="Dashboard"
+      icon={<DashboardIcon />}
+      color={blue[600]}
+    >
+      <Stack
+        direction={{ xs: 'column', sm: 'row' }}
+        spacing={2}
+        alignItems={{ sm: 'center' }}
+        flexWrap="wrap"
+        useFlexGap
+      >
+        <FormControl sx={{ width: 300 }} size="small">
+          <InputLabel id="select-parameter-label" sx={selectFontSx}>
+            Select parameter
+          </InputLabel>
+          <Select
+            labelId="select-parameter-label"
+            id="select-parameter"
+            displayEmpty
+            onChange={handleSelection}
+            value={selectedHyperparam}
+            input={<OutlinedInput label="Select parameter" />}
+            sx={selectFontSx}
+          >
+            {HYPERPARAMS.map(d => (
+              <MenuItem key={d} value={d} sx={selectFontSx}>
+                {d}
+              </MenuItem>
+            ))}
+          </Select>
+        </FormControl>
+
+        <Button
+          variant="contained"
+          disabled={currentIdx < 0}
+          onClick={handleBeginningButton}
+          sx={controlButtonSx}
+        >
+          Beginning
+        </Button>
+
+        <Button
+          variant="contained"
+          disabled={currentIdx < 0}
+          onClick={handleBackButton}
+          startIcon={<ArrowBackIosIcon />}
+          sx={controlButtonSx}
+        >
+          Back
+        </Button>
+
+        <Button
+          disabled={!selectedHyperparam}
+          variant="contained"
+          onClick={() => controller.togglePlayPause()}
+          endIcon={isPlaying ? <PauseIcon /> : <ArrowForwardIosIcon />}
+          sx={{
+            ...controlButtonSx,
+            minWidth: 130,
+            ...(isPlaying && {
+              backgroundColor: '#3b4499',
+              '&:hover': { backgroundColor: '#2f3780' },
+            }),
+          }}
+        >
+          {isPlaying ? 'Pause' : 'Play'}
+        </Button>
+      </Stack>
 
       <Box
         sx={{
-          backgroundColor: 'background.default',
-          minHeight: '100%',
-          py: 8,
+          display: 'flex',
+          flexDirection: { xs: 'column', md: 'row' },
+          gap: 2,
+          alignItems: 'flex-start',
         }}
       >
-        <Card>
-          <CardHeader
-            avatar={
-              <Avatar style={{ backgroundColor: blue[500] }}>
-                <AutoStoriesIcon />
-              </Avatar>
-            }
-            title="Dashboard & Story"
-            subheader="Choose a hyperparameter, and click play to animate the story."
-            titleTypographyProps={{ variant: 'h5' }}
-            subheaderTypographyProps={{ variant: 'body1' }}
+        <Stack
+          spacing={2}
+          sx={{ width: { xs: '100%', md: 300 }, flexShrink: 0, mt: 2 }}
+        >
+          <MetricCard
+            title="Current Accuracy"
+            value={percent(currentPoint)}
+            valueColor={msb.Colors.DarkOrange}
+            entries={cardEntries(currentPoint)}
           />
-          <CardContent sx={{ pt: '8px' }}>
-            <FormGroup
-              sx={{
-                flexDirection: {
-                  xs: 'column',
-                  sm: 'row',
-                  alignItems: 'center',
-                },
-              }}
-            >
-              <FormControl sx={{ m: 1, width: 300, mt: 0 }} size="small">
-                <InputLabel id="select-parameter-label" sx={selectFontSx}>
-                  Select parameter
-                </InputLabel>
-                <Select
-                  labelId="select-parameter-label"
-                  id="select-parameter"
-                  displayEmpty
-                  onChange={handleSelection}
-                  value={selectedHyperparam}
-                  input={<OutlinedInput label="Select parameter" />}
-                  sx={selectFontSx}
-                >
-                  {HYPERPARAMS.map(d => (
-                    <MenuItem key={d} value={d} sx={selectFontSx}>
-                      {d}
-                    </MenuItem>
-                  ))}
-                </Select>
-              </FormControl>
+          <MetricCard
+            title="Max Testing Accuracy"
+            value={percent(maxPoint)}
+            valueColor={msb.Colors.DarkGreen}
+            entries={cardEntries(maxPoint)}
+          />
+        </Stack>
 
-              <FormControl sx={{ m: 1, mt: 0 }}>
-                <Button
-                  variant="contained"
-                  disabled={currentIdx < 0}
-                  onClick={handleBeginningButton}
-                  sx={controlButtonSx}
-                >
-                  Beginning
-                </Button>
-              </FormControl>
-
-              <FormControl sx={{ m: 1, mt: 0 }}>
-                <Button
-                  variant="contained"
-                  disabled={currentIdx < 0}
-                  onClick={handleBackButton}
-                  startIcon={<ArrowBackIosIcon />}
-                  sx={controlButtonSx}
-                >
-                  Back
-                </Button>
-              </FormControl>
-
-              <FormControl sx={{ m: 1, mt: 0 }}>
-                <Button
-                  disabled={!selectedHyperparam}
-                  variant="contained"
-                  onClick={() => controller.togglePlayPause()}
-                  endIcon={isPlaying ? <PauseIcon /> : <ArrowForwardIosIcon />}
-                  sx={{
-                    ...controlButtonSx,
-                    minWidth: 130,
-                    ...(isPlaying && {
-                      backgroundColor: '#3b4499',
-                      '&:hover': { backgroundColor: '#2f3780' },
-                    }),
-                  }}
-                >
-                  {isPlaying ? 'Pause' : 'Play'}
-                </Button>
-              </FormControl>
-            </FormGroup>
-
-            <Box sx={{ display: 'flex', gap: 2, alignItems: 'flex-start' }}>
-              <Stack spacing={2} sx={{ width: 300, flexShrink: 0, mt: 2 }}>
-                <MetricCard
-                  title="Current Accuracy"
-                  value={percent(currentPoint)}
-                  valueColor={msb.Colors.DarkOrange}
-                  entries={cardEntries(currentPoint)}
-                />
-                <MetricCard
-                  title="Max Testing Accuracy"
-                  value={percent(maxPoint)}
-                  valueColor={msb.Colors.DarkGreen}
-                  entries={cardEntries(maxPoint)}
-                />
-              </Stack>
-
-              <Paper
-                variant="outlined"
-                sx={{
-                  borderRadius: 3,
-                  p: 2,
-                  mt: 2,
-                  flexGrow: 1,
-                  maxWidth: 900,
-                  display: 'flex',
-                  flexDirection: 'column',
-                }}
-              >
-                <svg
-                  ref={chartRefDetail}
-                  style={{ width: '100%', height: 360, border: '0px solid' }}
-                ></svg>
-                <svg
-                  ref={chartRefContext}
-                  style={{ width: '100%', height: 260, border: '0px solid' }}
-                ></svg>
-              </Paper>
-            </Box>
-          </CardContent>
-        </Card>
+        <Paper
+          variant="outlined"
+          sx={{
+            borderRadius: 3,
+            p: 2,
+            mt: 2,
+            flexGrow: 1,
+            width: { xs: '100%', md: 'auto' },
+            display: 'flex',
+            flexDirection: 'column',
+          }}
+        >
+          <svg
+            ref={chartRefDetail}
+            style={{ width: '100%', height: 360, border: '0px solid' }}
+          ></svg>
+          <svg
+            ref={chartRefContext}
+            style={{ width: '100%', height: 260, border: '0px solid' }}
+          ></svg>
+        </Paper>
       </Box>
-    </>
+    </ExampleLayout>
   );
 };
 

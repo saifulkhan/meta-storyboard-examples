@@ -6,14 +6,17 @@ import * as msb from '../../../msb/src';
 import { useEffect, useState } from 'react';
 import {
   Button,
-  Box,
-  Select,
-  MenuItem,
   FormControl,
   InputLabel,
-  Typography,
+  MenuItem,
+  Select,
+  Stack,
+  Tooltip,
 } from '@mui/material';
+import TableChartIcon from '@mui/icons-material/TableChart';
+import { green } from '@mui/material/colors';
 
+import { ExampleLayout } from '../../components/ExampleLayout';
 import { FeatureActionTable } from '../../components/tables/FeatureActionTable';
 import covid19NumFATable from '../../assets/feature-action-table/covid-19-numerical-fa-table.json';
 import mlNumFATableMirrored from '../../assets/feature-action-table/ml-numerical-fa-table-line.json';
@@ -62,68 +65,64 @@ const FeatureActionTablesPage = () => {
   };
 
   const handleCreateTable = () => {
-    // TODO: Implement logic to create a new table
+    // TODO: implement logic to create a new table
   };
 
   const handleSaveTable = () => {
-    // TODO: Implement logic to save the existing table
+    // TODO: implement logic to save the existing table
   };
 
   return (
-    <>
-      <title>Feature-Action Table</title>
-      <Box
-        sx={{
-          // backgroundColor: 'background.default',
-          minHeight: '100%',
-          py: 8,
-        }}
+    <ExampleLayout
+      title="Feature-Action Tables"
+      subtitle="Browse the feature-action tables that drive the stories, and experiment with features, actions, and their properties. This is an experimental feature."
+      chip="Interactive Table"
+      icon={<TableChartIcon />}
+      color={green[700]}
+    >
+      <Stack
+        direction={{ xs: 'column', sm: 'row' }}
+        spacing={2}
+        alignItems={{ sm: 'center' }}
+        justifyContent="space-between"
+        sx={{ mb: 3 }}
       >
-        <Typography variant="h5" sx={{ mr: 2 }}>
-          Experimental Feature
-        </Typography>
-        <br />
+        <FormControl sx={{ width: 300 }} size="small">
+          <InputLabel id="table-select-label">Select table</InputLabel>
+          <Select
+            labelId="table-select-label"
+            value={selectedTable}
+            onChange={handleTableChange}
+            label="Select table"
+          >
+            {tables.map(table => (
+              <MenuItem key={table} value={table}>
+                {table}
+              </MenuItem>
+            ))}
+          </Select>
+        </FormControl>
 
-        <Box
-          sx={{
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'space-between',
-            mb: 4,
-          }}
-        >
-          <Box sx={{ display: 'flex', alignItems: 'center' }}>
-            <FormControl sx={{ width: 200 }}>
-              <InputLabel id="table-select-label">Select Table</InputLabel>
-              <Select
-                labelId="table-select-label"
-                value={selectedTable}
-                onChange={handleTableChange}
-                label="Select a Feature-Action Table"
-              >
-                <MenuItem value="">Select a table</MenuItem>
-                {tables.map(table => (
-                  <MenuItem key={table} value={table}>
-                    {table}
-                  </MenuItem>
-                ))}
-              </Select>
-            </FormControl>
-          </Box>
+        <Stack direction="row" spacing={1}>
+          <Tooltip title="Not implemented yet">
+            <span>
+              <Button variant="outlined" disabled onClick={handleCreateTable}>
+                Create New Table
+              </Button>
+            </span>
+          </Tooltip>
+          <Tooltip title="Not implemented yet">
+            <span>
+              <Button variant="outlined" disabled onClick={handleSaveTable}>
+                Save Table
+              </Button>
+            </span>
+          </Tooltip>
+        </Stack>
+      </Stack>
 
-          <Box sx={{ display: 'flex', alignItems: 'center' }}>
-            <Button variant="contained" onClick={handleCreateTable}>
-              Create New Table
-            </Button>
-            <Box sx={{ width: 8 }} /> {/* Add space between buttons */}
-            <Button variant="contained" onClick={handleSaveTable}>
-              Save Table
-            </Button>
-          </Box>
-        </Box>
-        <FeatureActionTable data={data} setData={setData} />
-      </Box>
-    </>
+      <FeatureActionTable data={data} setData={setData} />
+    </ExampleLayout>
   );
 };
 

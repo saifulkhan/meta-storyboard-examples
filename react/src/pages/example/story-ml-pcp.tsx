@@ -4,37 +4,31 @@ import * as msb from '../../../msb/src';
 // import * as msb from "meta-storyboard";
 
 import { useEffect, useState, useRef } from 'react';
-import Head from 'next/head';
-import Box from '@mui/material/Box';
 import {
-  Avatar,
+  Box,
   Button,
-  Card,
-  CardContent,
-  CardHeader,
+  Fade,
   FormControl,
-  FormGroup,
   InputLabel,
   LinearProgress,
   MenuItem,
   OutlinedInput,
   Select,
   SelectChangeEvent,
-  Fade,
+  Stack,
 } from '@mui/material';
-import AutoStoriesIcon from '@mui/icons-material/AutoStories';
-import ArrowBackIosIcon from '@mui/icons-material/ArrowBackIos';
 import ArrowForwardIosIcon from '@mui/icons-material/ArrowForwardIos';
 import PauseIcon from '@mui/icons-material/Pause';
-import { blue } from '@mui/material/colors';
+import StackedLineChartIcon from '@mui/icons-material/StackedLineChart';
+import { orange } from '@mui/material/colors';
 
+import { ExampleLayout } from '../../components/ExampleLayout';
 import { useControllerWithState } from '../../hooks/useControllerWithState';
 import mlTrainingData from '../../assets/data/ml-training-data.json';
 import mlNumFATable from '../../assets/feature-action-table/ml-numerical-fa-table-pcp.json';
 
 const StoryMLPCP = () => {
-  const WIDTH = 1200,
-    HEIGHT = 1000;
+  const HEIGHT = 1000;
   const HYPERPARAMS = [
     'channels',
     'kernel_size',
@@ -85,7 +79,11 @@ const StoryMLPCP = () => {
       plot.reset();
     }
 
-    const data = msb.sortTimeseriesData(mlData, hyperparam, 'mean_test_accuracy');
+    const data = msb.sortTimeseriesData(
+      mlData,
+      hyperparam,
+      'mean_test_accuracy'
+    );
     console.log(`Selected hyperparameter ${hyperparam}'s data: ${data}`);
 
     // build story based on selected hyperparameter's data and feature-action table
@@ -120,128 +118,77 @@ const StoryMLPCP = () => {
     }
   };
 
-  const handleBeginningButton = () => {};
-  const handleBackButton = () => {};
-
   return (
-    <>
-      <Head>
-        <title>Story | ML Multivariate</title>
-      </Head>
-      <Box
-        sx={{
-          backgroundColor: 'background.default',
-          minHeight: '100%',
-          py: 8,
-        }}
-      >
-        <Card sx={{}}>
-          <CardHeader
-            avatar={
-              <Avatar style={{ backgroundColor: blue[500] }}>
-                <AutoStoriesIcon />
-              </Avatar>
-            }
-            title="Story: Machine Learning Multivariate"
-            subheader="Choose a hyperparameter, and click play to animate the story"
-          />
-          <CardContent sx={{ pt: '8px' }}>
-            {loading ? (
-              <Box sx={{ height: 40 }}>
-                <Fade
-                  in={loading}
-                  style={{
-                    transitionDelay: loading ? '800ms' : '0ms',
-                  }}
-                  unmountOnExit
-                >
-                  <LinearProgress />
-                </Fade>
-              </Box>
-            ) : (
-              <>
-                <FormGroup
-                  sx={{
-                    flexDirection: {
-                      xs: 'column',
-                      sm: 'row',
-                      alignItems: 'center',
-                    },
-                  }}
-                >
-                  <FormControl sx={{ m: 1, width: 300, mt: 0 }} size="small">
-                    <InputLabel id="select-region-label">
-                      Select hyperparameter
-                    </InputLabel>
-                    <Select
-                      labelId="select-region-label"
-                      id="select-region-label"
-                      displayEmpty
-                      onChange={handleSelection}
-                      value={hyperparam}
-                      input={<OutlinedInput label="Select hyperparameter" />}
-                    >
-                      {HYPERPARAMS.map(d => (
-                        <MenuItem key={d} value={d}>
-                          {d}
-                        </MenuItem>
-                      ))}
-                    </Select>
-                  </FormControl>
+    <ExampleLayout
+      title="Machine Learning Multivariate Story"
+      subtitle="A parallel coordinates plot animating the relationship between hyperparameters and model accuracy. Choose a hyperparameter and press play."
+      chip="Parallel Coordinates"
+      icon={<StackedLineChartIcon />}
+      color={orange[800]}
+    >
+      {loading ? (
+        <Box sx={{ height: 40 }}>
+          <Fade
+            in={loading}
+            style={{
+              transitionDelay: loading ? '800ms' : '0ms',
+            }}
+            unmountOnExit
+          >
+            <LinearProgress />
+          </Fade>
+        </Box>
+      ) : (
+        <>
+          <Stack
+            direction={{ xs: 'column', sm: 'row' }}
+            spacing={2}
+            alignItems={{ sm: 'center' }}
+            sx={{ mb: 2 }}
+          >
+            <FormControl sx={{ width: 300 }} size="small">
+              <InputLabel id="select-region-label">
+                Select hyperparameter
+              </InputLabel>
+              <Select
+                labelId="select-region-label"
+                id="select-region-label"
+                displayEmpty
+                onChange={handleSelection}
+                value={hyperparam}
+                input={<OutlinedInput label="Select hyperparameter" />}
+              >
+                {HYPERPARAMS.map(d => (
+                  <MenuItem key={d} value={d}>
+                    {d}
+                  </MenuItem>
+                ))}
+              </Select>
+            </FormControl>
 
-                  <FormControl sx={{ m: 1, width: 100, mt: 0 }}>
-                    <Button
-                      variant="contained"
-                      disabled={true}
-                      onClick={handleBeginningButton}
-                      component="span"
-                    >
-                      Beginning
-                    </Button>
-                  </FormControl>
-
-                  <FormControl sx={{ m: 1, width: 100, mt: 0 }}>
-                    <Button
-                      variant="contained"
-                      disabled={true}
-                      onClick={handleBackButton}
-                      startIcon={<ArrowBackIosIcon />}
-                      component="span"
-                    >
-                      Back
-                    </Button>
-                  </FormControl>
-
-                  <FormControl sx={{ m: 1, width: 100, mt: 0 }}>
-                    <Button
-                      disabled={!hyperparam}
-                      variant="contained"
-                      color={isPlaying ? 'secondary' : 'primary'}
-                      // 4. Play/pause button
-                      onClick={() => controller.togglePlayPause()}
-                      endIcon={
-                        isPlaying ? <PauseIcon /> : <ArrowForwardIosIcon />
-                      }
-                      sx={{ width: 120 }}
-                    >
-                      {isPlaying ? 'Pause' : 'Play'}
-                    </Button>
-                  </FormControl>
-                </FormGroup>
-                <svg
-                  ref={chartRef}
-                  style={{
-                    width: WIDTH,
-                    height: HEIGHT,
-                    border: '0px solid',
-                  }}
-                ></svg>
-              </>
-            )}
-          </CardContent>
-        </Card>
-      </Box>
-    </>
+            <Button
+              disabled={!hyperparam}
+              variant="contained"
+              color={isPlaying ? 'secondary' : 'primary'}
+              // 4. Play/pause button
+              onClick={() => controller.togglePlayPause()}
+              endIcon={isPlaying ? <PauseIcon /> : <ArrowForwardIosIcon />}
+              sx={{ width: 120 }}
+            >
+              {isPlaying ? 'Pause' : 'Play'}
+            </Button>
+          </Stack>
+          <svg
+            ref={chartRef}
+            style={{
+              width: '100%',
+              height: HEIGHT,
+              border: '0px solid',
+            }}
+          ></svg>
+        </>
+      )}
+    </ExampleLayout>
   );
 };
 

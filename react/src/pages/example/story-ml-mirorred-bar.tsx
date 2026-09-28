@@ -6,34 +6,29 @@ import * as msb from '../../../msb/src';
 import { useEffect, useState, useRef } from 'react';
 import {
   Box,
-  Avatar,
   Button,
-  Card,
-  CardContent,
-  CardHeader,
+  Fade,
   FormControl,
-  FormGroup,
   InputLabel,
   LinearProgress,
   MenuItem,
   OutlinedInput,
   Select,
-  Fade,
+  Stack,
 } from '@mui/material';
 import type { SelectChangeEvent } from '@mui/material/Select';
-import AutoStoriesIcon from '@mui/icons-material/AutoStories';
-import ArrowBackIosIcon from '@mui/icons-material/ArrowBackIos';
 import ArrowForwardIosIcon from '@mui/icons-material/ArrowForwardIos';
+import BarChartIcon from '@mui/icons-material/BarChart';
 import PauseIcon from '@mui/icons-material/Pause';
-import { blue } from '@mui/material/colors';
+import { teal } from '@mui/material/colors';
 
+import { ExampleLayout } from '../../components/ExampleLayout';
 import { useControllerWithState } from '../../hooks/useControllerWithState';
 import mlTrainingData from '../../assets/data/ml-training-data.json';
 import mlNumFATable from '../../assets/feature-action-table/ml-numerical-fa-table-pcp.json';
 
 const StoryMLMirroredBar = () => {
-  const WIDTH = 1200,
-    HEIGHT = 600;
+  const HEIGHT = 600;
   const HYPERPARAMS = [
     'channels',
     'kernel_size',
@@ -89,7 +84,11 @@ const StoryMLMirroredBar = () => {
     )
       return;
 
-    let data = msb.sortTimeseriesData(mlData, selectedHyperparam, 'mean_test_accuracy');
+    let data = msb.sortTimeseriesData(
+      mlData,
+      selectedHyperparam,
+      'mean_test_accuracy'
+    );
     const y1AxisName = 'mean_test_accuracy';
     const y2AxisName = selectedHyperparam;
 
@@ -143,145 +142,95 @@ const StoryMLMirroredBar = () => {
     }
   };
 
-  const handleBeginningButton = () => {};
-  const handleBackButton = () => {};
-
   return (
-    <>
-      <title key="title">Story | ML Provenance</title>
+    <ExampleLayout
+      title="Machine Learning Provenance Story"
+      subtitle="A mirrored bar chart narrating the provenance of a hyperparameter search. Choose a hyperparameter and press play."
+      chip="Mirrored Bar Chart"
+      icon={<BarChartIcon />}
+      color={teal[600]}
+    >
+      {loading ? (
+        <Box sx={{ height: 40 }}>
+          <Fade
+            in={loading}
+            style={{
+              transitionDelay: loading ? '800ms' : '0ms',
+            }}
+            unmountOnExit
+          >
+            <LinearProgress />
+          </Fade>
+        </Box>
+      ) : (
+        <>
+          <Stack
+            direction={{ xs: 'column', sm: 'row' }}
+            spacing={2}
+            alignItems={{ sm: 'center' }}
+            sx={{ mb: 2 }}
+          >
+            <FormControl sx={{ width: 300 }} size="small">
+              <InputLabel id="select-region-label">
+                Select hyperparameter
+              </InputLabel>
+              <Select
+                labelId="select-region-label"
+                id="select-region-label"
+                displayEmpty
+                onChange={handleSelection}
+                value={selectedHyperparam}
+                input={<OutlinedInput label="Select hyperparameter" />}
+              >
+                {HYPERPARAMS.map(d => (
+                  <MenuItem key={d} value={d}>
+                    {d}
+                  </MenuItem>
+                ))}
+              </Select>
+            </FormControl>
 
-      <Box
-        sx={{
-          backgroundColor: 'background.default',
-          minHeight: '100%',
-          py: 8,
-        }}
-      >
-        <Card sx={{}}>
-          <CardHeader
-            avatar={
-              <Avatar style={{ backgroundColor: blue[500] }}>
-                <AutoStoriesIcon />
-              </Avatar>
-            }
-            title="Story: Machine Learning Provenance"
-            subheader="Choose a hyperparameter, and click play to animate the story. ()"
-          />
-          <CardContent sx={{ pt: '8px' }}>
-            {loading ? (
-              <Box sx={{ height: 40 }}>
-                <Fade
-                  in={loading}
-                  style={{
-                    transitionDelay: loading ? '800ms' : '0ms',
-                  }}
-                  unmountOnExit
-                >
-                  <LinearProgress />
-                </Fade>
-              </Box>
-            ) : (
-              <>
-                <FormGroup
-                  sx={{
-                    flexDirection: {
-                      xs: 'column',
-                      sm: 'row',
-                      alignItems: 'center',
-                    },
-                  }}
-                >
-                  <FormControl sx={{ m: 1, width: 300, mt: 0 }} size="small">
-                    <InputLabel id="select-region-label">
-                      Select hyperparameter
-                    </InputLabel>
-                    <Select
-                      labelId="select-region-label"
-                      id="select-region-label"
-                      displayEmpty
-                      onChange={handleSelection}
-                      value={selectedHyperparam}
-                      input={<OutlinedInput label="Select hyperparameter" />}
-                    >
-                      {HYPERPARAMS.map(d => (
-                        <MenuItem key={d} value={d}>
-                          {d}
-                        </MenuItem>
-                      ))}
-                    </Select>
-                  </FormControl>
-
-                  <FormControl sx={{ m: 1, width: 100, mt: 0 }}>
-                    <Button
-                      variant="contained"
-                      disabled={true}
-                      onClick={handleBeginningButton}
-                      component="span"
-                    >
-                      Beginning
-                    </Button>
-                  </FormControl>
-
-                  <FormControl sx={{ m: 1, width: 100, mt: 0 }}>
-                    <Button
-                      variant="contained"
-                      disabled={true}
-                      onClick={handleBackButton}
-                      startIcon={<ArrowBackIosIcon />}
-                      component="span"
-                    >
-                      Back
-                    </Button>
-                  </FormControl>
-
-                  <FormControl sx={{ m: 1, width: 100, mt: 0 }}>
-                    <Button
-                      disabled={!selectedHyperparam}
-                      variant="contained"
-                      color={isPlaying ? 'secondary' : 'primary'}
-                      // 4. Play/pause button
-                      onClick={() => controller.togglePlayPause()}
-                      endIcon={
-                        isPlaying ? <PauseIcon /> : <ArrowForwardIosIcon />
-                      }
-                      sx={{ width: 120 }}
-                    >
-                      {isPlaying ? 'Pause' : 'Play'}
-                    </Button>
-                  </FormControl>
-                </FormGroup>
-                <div
-                  style={{
-                    display: 'flex',
-                    flexDirection: 'column',
-                    alignItems: 'left',
-                  }}
-                >
-                  <svg
-                    ref={chartRefLine}
-                    style={{
-                      width: WIDTH,
-                      height: HEIGHT * 0.7,
-                      border: '0px solid',
-                      marginBottom: '-50px',
-                    }}
-                  ></svg>
-                  <svg
-                    ref={chartRefMirrored}
-                    style={{
-                      width: WIDTH,
-                      height: HEIGHT,
-                      border: '0px solid',
-                      marginTop: '-50px',
-                    }}
-                  ></svg>
-                </div>
-              </>
-            )}
-          </CardContent>
-        </Card>
-      </Box>
-    </>
+            <Button
+              disabled={!selectedHyperparam}
+              variant="contained"
+              color={isPlaying ? 'secondary' : 'primary'}
+              // 4. Play/pause button
+              onClick={() => controller.togglePlayPause()}
+              endIcon={isPlaying ? <PauseIcon /> : <ArrowForwardIosIcon />}
+              sx={{ width: 120 }}
+            >
+              {isPlaying ? 'Pause' : 'Play'}
+            </Button>
+          </Stack>
+          <div
+            style={{
+              display: 'flex',
+              flexDirection: 'column',
+              alignItems: 'stretch',
+            }}
+          >
+            <svg
+              ref={chartRefLine}
+              style={{
+                width: '100%',
+                height: HEIGHT * 0.7,
+                border: '0px solid',
+                marginBottom: '-50px',
+              }}
+            ></svg>
+            <svg
+              ref={chartRefMirrored}
+              style={{
+                width: '100%',
+                height: HEIGHT,
+                border: '0px solid',
+                marginTop: '-50px',
+              }}
+            ></svg>
+          </div>
+        </>
+      )}
+    </ExampleLayout>
   );
 };
 

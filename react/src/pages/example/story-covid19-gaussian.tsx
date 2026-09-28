@@ -5,29 +5,26 @@ import * as msb from '../../../msb/src';
 
 import { useEffect, useState, useRef } from 'react';
 import {
-  Slider,
   Box,
-  Avatar,
   Button,
-  Card,
-  CardContent,
-  CardHeader,
+  Fade,
   FormControl,
-  FormGroup,
   InputLabel,
   LinearProgress,
   MenuItem,
   OutlinedInput,
   Select,
   SelectChangeEvent,
-  Fade,
+  Slider,
+  Stack,
+  Typography,
 } from '@mui/material';
-import AutoStoriesIcon from '@mui/icons-material/AutoStories';
-import ArrowBackIosIcon from '@mui/icons-material/ArrowBackIos';
 import ArrowForwardIosIcon from '@mui/icons-material/ArrowForwardIos';
 import PauseIcon from '@mui/icons-material/Pause';
-import { blue } from '@mui/material/colors';
+import SsidChartIcon from '@mui/icons-material/SsidChart';
+import { deepPurple } from '@mui/material/colors';
 
+import { ExampleLayout } from '../../components/ExampleLayout';
 import { useControllerWithState } from '../../hooks/useControllerWithState';
 import covid19CasesData from '../../assets/data/covid19-cases-data.json';
 import covid19NumericalFATable from '../../assets/feature-action-table/covid-19-numerical-fa-table.json';
@@ -35,8 +32,7 @@ import covid19CategoricalFATable from '../../assets/feature-action-table/covid-1
 import covid19CategoricalData from '../../assets/feature-action-table/covid-19-categorical-table.json';
 
 const StoryCovid19Gaussian = () => {
-  const WIDTH = 1200,
-    HEIGHT = 500;
+  const HEIGHT = 500;
   const valuetext = (value: number): string => `${value}`; // slider formatted value
 
   const chartRef = useRef(null);
@@ -152,146 +148,99 @@ const StoryCovid19Gaussian = () => {
     }
   };
 
-  const handleBeginningButton = () => {};
-  const handleBackButton = () => {};
-
   return (
-    <>
-      <title>Story | COVID-19 (Gaussian)</title>
+    <ExampleLayout
+      title="COVID-19 Case Story (Gaussian)"
+      subtitle="The COVID-19 story segmented with Gaussian mixture models to rank the most important segments. Set the number of segments, choose a region, and press play."
+      chip="Gaussian Segmentation"
+      icon={<SsidChartIcon />}
+      color={deepPurple[500]}
+    >
+      {loading ? (
+        <Box sx={{ height: 40 }}>
+          <Fade
+            in={loading}
+            style={{
+              transitionDelay: loading ? '800ms' : '0ms',
+            }}
+            unmountOnExit
+          >
+            <LinearProgress />
+          </Fade>
+        </Box>
+      ) : (
+        <>
+          <Stack
+            direction={{ xs: 'column', sm: 'row' }}
+            spacing={3}
+            alignItems={{ sm: 'center' }}
+            sx={{ mb: 2 }}
+          >
+            <Box sx={{ width: 260 }}>
+              <Typography
+                variant="caption"
+                color="text.secondary"
+                id="segment-slider-label"
+              >
+                Number of segments
+              </Typography>
+              <Slider
+                disabled={false}
+                aria-labelledby="segment-slider-label"
+                defaultValue={4}
+                getAriaValueText={valuetext}
+                step={1}
+                marks
+                min={0}
+                max={10}
+                value={numSegment}
+                valueLabelDisplay="auto"
+                onChange={handleChangeSlider}
+                size="small"
+              />
+            </Box>
 
-      <Box
-        sx={{
-          backgroundColor: 'background.default',
-          minHeight: '100%',
-          py: 8,
-        }}
-      >
-        <Card sx={{ minWidth: 1200 }}>
-          <CardHeader
-            avatar={
-              <Avatar style={{ backgroundColor: blue[500] }}>
-                <AutoStoriesIcon />
-              </Avatar>
-            }
-            title="Story: Covid19 Single Location"
-            subheader="Choose a segment value, a region, and click play to animate the story"
-          />
-          <CardContent sx={{ pt: '8px' }}>
-            {loading ? (
-              <Box sx={{ height: 40 }}>
-                <Fade
-                  in={loading}
-                  style={{
-                    transitionDelay: loading ? '800ms' : '0ms',
-                  }}
-                  unmountOnExit
-                >
-                  <LinearProgress />
-                </Fade>
-              </Box>
-            ) : (
-              <>
-                <FormGroup
-                  sx={{
-                    flexDirection: {
-                      xs: 'column',
-                      sm: 'row',
-                      alignItems: 'center',
-                    },
-                  }}
-                >
-                  <InputLabel sx={{ m: 1, mt: 0 }} id="segment-slider-label">
-                    Set segment value
-                  </InputLabel>
-                  <FormControl sx={{ m: 1, width: 300, mt: 0 }} size="small">
-                    <Slider
-                      disabled={false}
-                      aria-label="Segments"
-                      defaultValue={4}
-                      getAriaValueText={valuetext}
-                      step={1}
-                      marks
-                      min={0}
-                      max={10}
-                      value={numSegment}
-                      valueLabelDisplay="auto"
-                      onChange={handleChangeSlider}
-                    />
-                  </FormControl>
+            <FormControl sx={{ width: 300 }} size="small">
+              <InputLabel id="select-region-label">Select region</InputLabel>
+              <Select
+                labelId="select-region-label"
+                id="select-region-label"
+                displayEmpty
+                onChange={handleSelection}
+                value={region}
+                input={<OutlinedInput label="Select region" />}
+              >
+                {regions.map(d => (
+                  <MenuItem key={d} value={d}>
+                    {d}
+                  </MenuItem>
+                ))}
+              </Select>
+            </FormControl>
 
-                  <FormControl sx={{ m: 1, width: 300, mt: 0 }} size="small">
-                    <InputLabel id="select-region-label">
-                      Select region
-                    </InputLabel>
-                    <Select
-                      labelId="select-region-label"
-                      id="select-region-label"
-                      displayEmpty
-                      onChange={handleSelection}
-                      value={region}
-                      input={<OutlinedInput label="Select region" />}
-                    >
-                      {regions.map(d => (
-                        <MenuItem key={d} value={d}>
-                          {d}
-                        </MenuItem>
-                      ))}
-                    </Select>
-                  </FormControl>
-
-                  <FormControl sx={{ m: 1, width: 100, mt: 0 }}>
-                    <Button
-                      variant="contained"
-                      disabled={true}
-                      onClick={handleBeginningButton}
-                      component="span"
-                    >
-                      Beginning
-                    </Button>
-                  </FormControl>
-
-                  <FormControl sx={{ m: 1, width: 100, mt: 0 }}>
-                    <Button
-                      variant="contained"
-                      disabled={true}
-                      onClick={handleBackButton}
-                      startIcon={<ArrowBackIosIcon />}
-                      component="span"
-                    >
-                      Back
-                    </Button>
-                  </FormControl>
-
-                  <FormControl sx={{ m: 1, width: 100, mt: 0 }}>
-                    <Button
-                      disabled={!region}
-                      variant="contained"
-                      color={isPlaying ? 'secondary' : 'primary'}
-                      // 4. Play/pause button
-                      onClick={() => controller.togglePlayPause()}
-                      endIcon={
-                        isPlaying ? <PauseIcon /> : <ArrowForwardIosIcon />
-                      }
-                      sx={{ width: 120 }}
-                    >
-                      {isPlaying ? 'Pause' : 'Play'}
-                    </Button>
-                  </FormControl>
-                </FormGroup>
-                <svg
-                  ref={chartRef}
-                  style={{
-                    width: WIDTH,
-                    height: HEIGHT,
-                    border: '0px solid',
-                  }}
-                ></svg>
-              </>
-            )}
-          </CardContent>
-        </Card>
-      </Box>
-    </>
+            <Button
+              disabled={!region}
+              variant="contained"
+              color={isPlaying ? 'secondary' : 'primary'}
+              // 4. Play/pause button
+              onClick={() => controller.togglePlayPause()}
+              endIcon={isPlaying ? <PauseIcon /> : <ArrowForwardIosIcon />}
+              sx={{ width: 120 }}
+            >
+              {isPlaying ? 'Pause' : 'Play'}
+            </Button>
+          </Stack>
+          <svg
+            ref={chartRef}
+            style={{
+              width: '100%',
+              height: HEIGHT,
+              border: '0px solid',
+            }}
+          ></svg>
+        </>
+      )}
+    </ExampleLayout>
   );
 };
 
