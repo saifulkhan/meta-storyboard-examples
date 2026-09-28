@@ -30,6 +30,7 @@ import MenuBookIcon from '@mui/icons-material/MenuBook';
 import OpenInNewIcon from '@mui/icons-material/OpenInNew';
 import ScienceIcon from '@mui/icons-material/Science';
 import ShowChartIcon from '@mui/icons-material/ShowChart';
+import SwipeIcon from '@mui/icons-material/Swipe';
 import SsidChartIcon from '@mui/icons-material/SsidChart';
 import StackedLineChartIcon from '@mui/icons-material/StackedLineChart';
 import TableChartIcon from '@mui/icons-material/TableChart';
@@ -39,6 +40,7 @@ import {
   green,
   indigo,
   orange,
+  pink,
   teal,
 } from '@mui/material/colors';
 
@@ -74,6 +76,15 @@ const exampleStories: StoryCard[] = [
     chip: 'Gaussian Segmentation',
     icon: <SsidChartIcon />,
     color: deepPurple[500],
+  },
+  {
+    title: 'COVID-19 Scrollable Storyboard',
+    description:
+      'A scroll-driven ("scrollytelling") storyboard: scroll through event cards to progress the animated line plot and its progress timeline.',
+    path: '/example/story-covid19-scrollable',
+    chip: 'Scrollytelling',
+    icon: <SwipeIcon />,
+    color: pink[500],
   },
   {
     title: 'Machine Learning Provenance Story',
